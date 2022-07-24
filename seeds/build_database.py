@@ -17,7 +17,6 @@ session.flush()
 # iterate over the MENU and CUSTOMERS structure and populate the database
 price = 10
 for customer in CUSTOMERS:
-    print(customer)
     c = Customer(id=customer.get("customer_id"),
                  name=customer.get("name"),
                  contact_number=customer.get("contact_number"))
@@ -25,7 +24,6 @@ for customer in CUSTOMERS:
     for order in customer.get("orders"):
         price += 1.5
         employee_info = order.get("employee")
-        print(employee_info)
         e = Employee(id=employee_info.get("employee_id"),
                      name=employee_info.get("name"),
                      contact_number=employee_info.get("contact_number"))

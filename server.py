@@ -1,8 +1,7 @@
-"""
-Main module of the server file
-"""
+import connexion
 from flask import render_template
-from config.config import *
+
+connex_app = connexion.FlaskApp(__name__, specification_dir="api_definition/")
 
 # Read the swagger files to configure the endpoints
 connex_app.add_api("operation.yml")

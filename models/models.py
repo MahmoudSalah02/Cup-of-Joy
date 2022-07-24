@@ -1,14 +1,10 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
 
-sql_url = "sqlite:///cafe.db"
-engine = create_engine(sql_url)
-Session = sessionmaker(bind=engine)
-
-session = Session()
+from config.config import *
 
 Base = declarative_base()
 
