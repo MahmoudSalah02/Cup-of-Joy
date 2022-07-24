@@ -1,11 +1,10 @@
-from models.models import *
+from models.models import session, Customer, Order, OrderItem, Payment, Employee, Item
 from seeds.data import MENU, CUSTOMERS
 from datetime import datetime
 
-Base.metadata.create_all(engine)
-
 items = []
 for item in MENU:
+    print(item)
     i = Item(name=item.get("name"),
              price=item.get("price"),
              ingredients=item.get("ingredients"))
@@ -18,6 +17,7 @@ session.flush()
 # iterate over the MENU and CUSTOMERS structure and populate the database
 price = 10
 for customer in CUSTOMERS:
+    print(customer)
     c = Customer(id=customer.get("customer_id"),
                  name=customer.get("name"),
                  contact_number=customer.get("contact_number"))
@@ -25,6 +25,7 @@ for customer in CUSTOMERS:
     for order in customer.get("orders"):
         price += 1.5
         employee_info = order.get("employee")
+        print(employee_info)
         e = Employee(id=employee_info.get("employee_id"),
                      name=employee_info.get("name"),
                      contact_number=employee_info.get("contact_number"))
