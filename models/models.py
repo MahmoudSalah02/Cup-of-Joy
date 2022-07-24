@@ -21,6 +21,10 @@ class Customer(Base):
     orders_placed = relationship('Order',
                                  back_populates="customer")
 
+    def __repr__(self):
+        return "<Customer(name='%s', contact_number='%s')>" % (
+            self.name, self.contact_number)
+
 
 class Order(Base):
     __tablename__ = "order"
@@ -43,6 +47,10 @@ class Order(Base):
                                  cascade="all, delete, delete-orphan",
                                  single_parent=True)
 
+    def __repr__(self):
+        return "<Order(order_time='%s', status='%s'>" % (
+            self.order_time, self.status)
+
 
 class Employee(Base):
     __tablename__ = "employee"
@@ -53,6 +61,10 @@ class Employee(Base):
     orders_served = relationship('Order',
                                  back_populates="employee")
 
+    def __repr__(self):
+        return "<Order(name='%s', contact_number='%s', email='%s')>" % (
+            self.name, self.contact_number, self.email)
+
 
 class Item(Base):
     __tablename__ = "item"
@@ -61,6 +73,10 @@ class Item(Base):
     price = Column(String(32), nullable=False)
     ingredients = Column(String(64))
 
+    def __repr__(self):
+        return "<Order(name='%s', price='%s', ingredients='%s')>" % (
+            self.name, self.price, self.ingredients)
+
 
 class Payment(Base):
     __tablename__ = "payment"
@@ -68,6 +84,10 @@ class Payment(Base):
     customer_id = Column(Integer, ForeignKey('customer.id'))
     employee_id = Column(Integer, ForeignKey('employee.id'))
     price = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return "<Order(order_id='%s', price='%s')>" % (
+            self.order_id, self.price)
 
 
 class OrderItem(Base):
@@ -79,6 +99,10 @@ class OrderItem(Base):
     customer_notes = Column(String(64), nullable=False)
     order = relationship('Order',
                          back_populates="items_ordered")
+
+    def __repr__(self):
+        return "<Order(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
+            self.order_id, self.item_id, self.quantity, self.customer_notes)
 
 
 Base.metadata.create_all(engine)
