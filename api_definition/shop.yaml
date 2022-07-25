@@ -40,7 +40,7 @@ paths:
                 status:
                   type: string
                   description: Status of the order
-                order_items:
+                items_ordered:
                   type: array
                   items:
                     properties:
@@ -104,8 +104,8 @@ paths:
                   description: Id of employee
                 status:
                   type: string
-                  description: Status of the orrder
-                order_items:
+                  description: Status of the order
+                items_ordered:
                   type: array
                   items:
                     properties:
@@ -273,7 +273,7 @@ components:
                 type: string
                 description: Name of the order item
               quantity:
-                type: string
+                type: integer
                 description: Quantity of the order item
               customer_notes:
                 type: string

@@ -4,10 +4,10 @@ Order table
 """
 
 from flask import abort, make_response
-
+from decimal import Decimal
 from controllers import customers, employees
 from models.models import Order, session
-from models.schemas import OrderSchema
+from models.schemas import OrderSchema, PaymentSchema
 
 
 def read_all():
@@ -43,6 +43,22 @@ def create(body):
     new_order_deserialized = order_schema.load(body, session=session)
 
     session.add(new_order_deserialized)
+    session.flush()
+
+    price = 0
+    for orderItem in new_order_deserialized.items_ordered:
+        item_details = orderItem.item_details
+        price += Decimal(item_details.price.strip('$')) * orderItem.quantity
+
+    new_payment = {
+        "order_id": new_order_deserialized.id,
+        "customer_id": body.get("customer_id"),
+        "employee_id": body.get("employee_id"),
+        "price": price
+    }
+
+    payment_schema = PaymentSchema()
+    payment_schema.load(new_payment, session=session)
     session.commit()
 
     new_order_serialize = order_schema.dump(new_order_deserialized)

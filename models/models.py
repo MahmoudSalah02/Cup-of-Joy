@@ -68,6 +68,8 @@ class Item(Base):
     name = Column(String(32), nullable=False, unique=True)
     price = Column(String(32), nullable=False)
     ingredients = Column(String(64))
+    item_ordered = relationship('OrderItem',
+                                back_populates="item_details")
 
     def __repr__(self):
         return "<Order(name='%s', price='%s', ingredients='%s')>" % (
@@ -95,6 +97,8 @@ class OrderItem(Base):
     customer_notes = Column(String(64), nullable=False)
     order = relationship('Order',
                          back_populates="items_ordered")
+    item_details = relationship('Item',
+                                back_populates="item_ordered")
 
     def __repr__(self):
         return "<Order(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
