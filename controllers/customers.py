@@ -23,15 +23,15 @@ def read_all():
     return customer_data
 
 
-def create(customer):
+def create(body):
     """
     This function creates a new customer based on the customer
     data passed in
-    :param customer:
+    :param body:
     :return:
     """
     existing_customer = (
-        session.query(Customer).filter(Customer.contact_number == customer.get("contact_number"))
+        session.query(Customer).filter(Customer.contact_number == body.get("contact_number"))
         .one_or_none()
     )
 
@@ -40,7 +40,7 @@ def create(customer):
 
         # deserialize customer to a database object
         customer_schema = CustomerSchema()
-        new_customer_deserialized = customer_schema.load(customer, session=session)
+        new_customer_deserialized = customer_schema.load(body, session=session)
 
         # add the customer to the database
         session.add(new_customer_deserialized)
@@ -51,7 +51,7 @@ def create(customer):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Customer {customer.get('name')} exists already")
+        abort(409, f"Customer {body.get('name')} exists already")
 
 
 def read_one(customer_id):
@@ -75,17 +75,17 @@ def read_one(customer_id):
         abort(404, f"Customer not found for Id: {customer_id}")
 
 
-def update(customer_id, customer):
+def update(customer_id, body):
     """
     This function updates an existing customer in the database
     :param customer_id: id of customer to update
-    :param customer: new changes to the customer
+    :param body: new changes to the customer
     :return:
     """
 
     existing_customer = read_one(customer_id)
-    existing_customer["name"] = customer.get("name")
-    existing_customer["contact_number"] = customer.get("contact_number")
+    existing_customer["name"] = body.get("name")
+    existing_customer["contact_number"] = body.get("contact_number")
 
     # deserialize data into a database object
     customer_schema = CustomerSchema()

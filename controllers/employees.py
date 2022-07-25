@@ -23,15 +23,15 @@ def read_all():
     return employee_data
 
 
-def create(employee):
+def create(body):
     """
     This function creates a new employee based on the employee
     data passed in
-    :param employee: employee to be created
+    :param body: employee to be created
     :return: employee created if request successful, error 409 otherwise
     """
     existing_employee = (
-        session.query(Employee).filter(Employee.contact_number == employee.get("contact_number"))
+        session.query(Employee).filter(Employee.contact_number == body.get("contact_number"))
         .one_or_none()
     )
 
@@ -40,7 +40,7 @@ def create(employee):
 
         # deserialize employee to a database object
         employee_schema = EmployeeSchema()
-        new_employee_deserialized = employee_schema.load(employee, session=session)
+        new_employee_deserialized = employee_schema.load(body, session=session)
 
         # add the employee to the database
         session.add(new_employee_deserialized)
@@ -51,7 +51,7 @@ def create(employee):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Employee {employee.get('name')} exists already")
+        abort(409, f"Employee {body.get('name')} exists already")
 
 
 def read_one(employee_id):
@@ -75,7 +75,7 @@ def read_one(employee_id):
         abort(404, f"Employee not found for Id: {employee_id}")
 
 
-def update(employee_id, employee):
+def update(employee_id, body):
     """
     This function updates an existing employee in the database
     :param employee_id: id of employee to update
@@ -84,9 +84,9 @@ def update(employee_id, employee):
     """
 
     existing_employee = read_one(employee_id)
-    existing_employee["name"] = employee.get("name")
-    existing_employee["contact_number"] = employee.get("contact_number")
-    existing_employee["email"] = employee.get("email")
+    existing_employee["name"] = body.get("name")
+    existing_employee["contact_number"] = body.get("contact_number")
+    existing_employee["email"] = body.get("email")
 
     # deserialize data into a database object
     employee_schema = EmployeeSchema()

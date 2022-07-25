@@ -1,0 +1,257 @@
+openapi: 3.0.0
+info:
+  title: operations APIs
+  description: service openapi definition
+  version: "1.0.0"
+  contact:
+    email: mahmouds343@gmail.com
+servers:
+  - url: /operations
+paths:
+  /employees:
+    get:
+      operationId: controllers.employees.read_all
+      tags:
+        - Employees
+      summary: Read all employees
+      responses:
+        200:
+          description: Successfully read all employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    post:
+      tags:
+        - Employees
+      summary: Creates a new employee in the database
+      operationId: controllers.employees.create
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: Name of the employee
+                contact_number:
+                  type: integer
+                  description: Contact number of the employee
+                email:
+                  type: string
+                  description: Email of employee to create
+              required:
+                - name
+                - contact_number
+      responses:
+        200:
+          description: Successfully created an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+  /employees/{employee_id}:
+    get:
+      operationId: controllers.employees.read_one
+      tags:
+        - Employees
+      summary: Read an employee
+      parameters:
+        - in: path
+          name: employee_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully read an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    put:
+      operationId: controllers.employees.update
+      tags:
+        - Employees
+      summary: Update an employee
+      parameters:
+        - in: path
+          name: employee_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: Name of the employee
+                contact_number:
+                  type: integer
+                  description: Contact number of the employee
+                email:
+                  type: string
+                  description: Email of employee to create
+              required:
+                - name
+                - contact_number
+      responses:
+        200:
+          description: Successfully updated an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    delete:
+      operationId: controllers.employees.delete
+      tags:
+        - Employees
+      summary: Delete an employee
+      parameters:
+        - in: path
+          name: employee_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted an employee
+  /items:
+    get:
+      operationId: controllers.items.read_all
+      tags:
+        - Items
+      summary: Read all items
+      responses:
+        200:
+          description: Successfully read all items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    post:
+      tags:
+        - Items
+      summary: Create a new item
+      operationId: controllers.items.create
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: Name of the item
+                ingredients:
+                  type: string
+                  description: Ingredients of item
+                price:
+                  type: string
+                  description: Price of item
+              required:
+                - name
+                - price
+      responses:
+        200:
+          description: Successfully created an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+  /items/{item_id}:
+    get:
+      operationId: controllers.items.read_one
+      tags:
+        - Items
+      summary: Read an item
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully read an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    put:
+      operationId: controllers.items.update
+      tags:
+        - Items
+      summary: Update an item
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: Name of the item
+                ingredients:
+                  type: string
+                  description: Ingredients of item
+                price:
+                  type: string
+                  description: Price of item
+              required:
+                - name
+                - price
+      responses:
+        200:
+          description: Sucessfully updated an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+    delete:
+      operationId: controllers.items.delete
+      tags:
+        - Items
+      summary: Delete an item
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted an item
+components:
+  schemas:
+    Employee:
+      properties:
+        id:
+          type: string
+          description: Id of the employee
+        name:
+          type: string
+          description: Name of the employee
+        contact_number:
+          type: integer
+          description: Contact number of the employee
+        email:
+          type: string
+          description: Email of the employee
+    Item:
+      properties:
+        name:
+          type: string
+          description: Name of the item
+        ingredients:
+          type: string
+          description: Ingredients of item
+        price:
+          type: string
+          description: Price of item

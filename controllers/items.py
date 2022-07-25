@@ -23,15 +23,15 @@ def read_all():
     return item_data
 
 
-def create(item):
+def create(body):
     """
     This function creates a new item based on the item
     data passed in
-    :param item: item to be created
+    :param body: item to be created
     :return: item created if request successful, error 409 otherwise
     """
     existing_item = (
-        session.query(Item).filter(Item.name == item.get("name"))
+        session.query(Item).filter(Item.name == body.get("name"))
         .one_or_none()
     )
 
@@ -40,7 +40,7 @@ def create(item):
 
         # deserialize item to a database object
         item_schema = ItemSchema()
-        new_item_deserialized = item_schema.load(item, session=session)
+        new_item_deserialized = item_schema.load(body, session=session)
 
         # add the item to the database
         session.add(new_item_deserialized)
@@ -51,7 +51,7 @@ def create(item):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Item {item.get('name')} exists already")
+        abort(409, f"Item {body.get('name')} exists already")
 
 
 def read_one(item_id):
@@ -75,18 +75,18 @@ def read_one(item_id):
         abort(404, f"Item not found for Id: {item_id}")
 
 
-def update(item_id, item):
+def update(item_id, body):
     """
     This function updates an existing item in the database
     :param item_id: id of item to update
-    :param item: new changes to the item
+    :param body: new changes to the item
     :return:
     """
 
     existing_item = read_one(item_id)
-    existing_item["name"] = item.get("name")
-    existing_item["price"] = item.get("price")
-    existing_item["ingredients"] = item.get("ingredients")
+    existing_item["name"] = body.get("name")
+    existing_item["price"] = body.get("price")
+    existing_item["ingredients"] = body.get("ingredients")
 
     # deserialize data into a database object
     item_schema = ItemSchema()

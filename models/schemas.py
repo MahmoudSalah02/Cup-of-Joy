@@ -29,8 +29,6 @@ class OrderSchema(SQLAlchemySchema):
     employee_id = auto_field()
     order_time = auto_field()
     status = auto_field()
-    customer = auto_field()
-    employee = auto_field()
     items_ordered = fields.Nested(OrderItemSchema(only=("item_id", "quantity", "customer_notes"), many=True), many=True)
 
 
@@ -44,7 +42,6 @@ class CustomerSchema(SQLAlchemySchema):
     id = auto_field()
     name = auto_field()
     contact_number = auto_field()
-    orders_placed = fields.Nested(OrderSchema(only=("id", "status", "order_time", "customer_id"), many=True), many=True)
 
 
 class EmployeeSchema(SQLAlchemySchema):
@@ -58,7 +55,6 @@ class EmployeeSchema(SQLAlchemySchema):
     name = auto_field()
     contact_number = auto_field()
     email = auto_field()
-    orders_served = fields.Nested(OrderSchema(only=("id", "status", "order_time", "customer_id"), many=True), many=True)
 
 
 class ItemSchema(SQLAlchemySchema):

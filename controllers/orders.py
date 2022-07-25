@@ -3,11 +3,11 @@ This is the orders module and supports all the REST actions for the
 Order table
 """
 
-from datetime import datetime
-
 from flask import abort, make_response
-from models.models import Order, Customer, Employee, session
-from models.schemas import OrderSchema, CustomerSchema
+
+from controllers import customers, employees
+from models.models import Order, session
+from models.schemas import OrderSchema
 
 
 def read_all():
@@ -22,63 +22,26 @@ def read_all():
     # Serialize the data for the response
     order_schema = OrderSchema(many=True)
     orders_data = order_schema.dump(orders)
+    print(orders_data)
     return orders_data
 
 
-def create(order):
+def create(body):
     """
     This function creates a new order based on the
     passed in order data
-    :param order:  order to create
+    :param body:  order to create
     :return:       201 on success, 406 on person exists
     """
+    if customers.read_one(body.get("customer_id")) is None:
+        abort(404, f"Customer not found for Id: {body.get('customer_id')}")
 
-    customer_name = order.get("customer_name")
-    customer_contact_number = order.get("customer_contact_number")
-    employee_contact_number = order.get("employee_contact_number")
+    if employees.read_one(body.get("employee_id")) is None:
+        abort(404, f"Employee not found for Id: {body.get('employee_id')}")
 
-    existing_customer = (
-        session.query(Customer).filter(Customer.contact_number == customer_contact_number)
-        .one_or_none()
-    )
-
-    existing_employee = (
-        session.query(Employee).filter(Employee.contact_number == employee_contact_number)
-        .one_or_none()
-    )
-
-    # abort if employee does not exist
-    if existing_employee is None:
-        abort(409, f"Employee with number {employee_contact_number} does not exist")
-
-    # customer ordered for the first time
-    if existing_customer is None:
-        new_customer_dic = {
-            "name": customer_name,
-            "contact_number": customer_contact_number
-        }
-        # Create a customer instance using the schema and the passed in order details
-        customer_schema = CustomerSchema()
-        new_customer_deserialized = customer_schema.load(new_customer_dic, session=session)
-
-        # Add the customer to the database
-        session.add(new_customer_deserialized)
-        existing_customer = new_customer_deserialized
-
-    # synchronize the in-memory state of the Session with the database
-    session.flush()
-
-    new_order_dic = {
-        "customer_id": existing_customer.id,
-        "employee_id": existing_employee.id,
-        "order_time": str(datetime.now()),
-        "status": "Preparing"
-    }
-    # create an order instance using the schema and the passed in order details
     order_schema = OrderSchema()
-    new_order_deserialized = order_schema.load(new_order_dic, session=session)
+    new_order_deserialized = order_schema.load(body, session=session)
 
-    # Add the order to the database
     session.add(new_order_deserialized)
     session.commit()
 
@@ -106,44 +69,32 @@ def read_one(order_id):
         abort(404, f"Order not found for Id: {order_id}")
 
 
-def update(order_id, order):
+def update(order_id, body):
     """
     This function updates an existing order in the database
     :param order_id: id of the oder to update
-    :param order: new changes to the order
+    :param body: new changes to the order
     :return:
     """
-    existing_order = read_one(order_id)
-    existing_order["status"] = order.get("status")
 
-    # deserialize data into a database object
+    if read_one(order_id) is None:
+        abort(404, f"Order not found for Id: {order_id}")
+
+    if customers.read_one(body.get("customer_id")) is None:
+        abort(404, f"Customer not found for Id: {body.get('customer_id')}")
+
+    if employees.read_one(body.get("employee_id")) is None:
+        abort(404, f"Employee not found for Id: {body.get('employee_id')}")
+
+    body["id"] = order_id
     order_schema = OrderSchema()
-    existing_order_deserialized = order_schema.load(existing_order, session=session)
+    existing_order_deserialized = order_schema.load(body, session=session)
 
     session.merge(existing_order_deserialized)
     session.commit()
 
-    return existing_order, 200
-
-
-def update_items(order_id, order_items):
-    """
-    This function updates the items in an existing order in the database
-    :param order_id: id of the oder to update
-    :param order_items: new changes to the items in the order
-    :return:
-    """
-    existing_order = read_one(order_id)
-    existing_order["items_ordered"] = order_items
-
-    # deserialize data into a database object
-    order_schema = OrderSchema()
-    existing_order_deserialized = order_schema.load(existing_order, session=session)
-
-    session.merge(existing_order_deserialized)
-    session.commit()
-
-    return existing_order, 200
+    new_order_serialize = order_schema.dump(existing_order_deserialized)
+    return new_order_serialize, 201
 
 
 def delete(order_id):
