@@ -61,7 +61,7 @@ paths:
           name: employee_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully read an employee
@@ -79,7 +79,7 @@ paths:
           name: employee_id
           required: true
           schema:
-            type: string
+            type: integer
       requestBody:
         content:
           'application/json':
@@ -114,7 +114,7 @@ paths:
           name: employee_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully deleted an employee
@@ -171,7 +171,7 @@ paths:
           name: item_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully read an item
@@ -189,7 +189,7 @@ paths:
           name: item_id
           required: true
           schema:
-            type: string
+            type: integer
       requestBody:
         content:
           'application/json':
@@ -224,7 +224,7 @@ paths:
           name: item_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully deleted an item
@@ -233,7 +233,7 @@ components:
     Employee:
       properties:
         id:
-          type: string
+          type: integer
           description: Id of the employee
         name:
           type: string
@@ -246,6 +246,9 @@ components:
           description: Email of the employee
     Item:
       properties:
+        id:
+          type: integer
+          description: Id of the item
         name:
           type: string
           description: Name of the item

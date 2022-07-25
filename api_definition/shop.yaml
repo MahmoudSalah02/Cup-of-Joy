@@ -32,10 +32,10 @@ paths:
             schema:
               properties:
                 customer_id:
-                  type: string
+                  type: integer
                   description: Id of customer
                 employee_id:
-                  type: string
+                  type: integer
                   description: Id of employee
                 status:
                   type: string
@@ -45,7 +45,7 @@ paths:
                   items:
                     properties:
                       item_id:
-                        type: string
+                        type: integer
                         description: Id of item on menu
                       quantity:
                         type: integer
@@ -72,7 +72,7 @@ paths:
           name: order_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully read orders set operation
@@ -90,17 +90,17 @@ paths:
           name: order_id
           required: true
           schema:
-            type: string
+            type: integer
       requestBody:
         content:
           application/json:
             schema:
               properties:
                 customer_id:
-                  type: string
+                  type: integer
                   description: Id of customer
                 employee_id:
-                  type: string
+                  type: integer
                   description: Id of employee
                 status:
                   type: string
@@ -110,7 +110,7 @@ paths:
                   items:
                     properties:
                       item_id:
-                        type: string
+                        type: integer
                         description: Id of item on menu
                       quantity:
                         type: integer
@@ -135,7 +135,7 @@ paths:
           name: order_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully deleted an order
@@ -189,7 +189,7 @@ paths:
           name: customer_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully read a customer
@@ -207,7 +207,7 @@ paths:
           name: customer_id
           required: true
           schema:
-            type: string
+            type: integer
       requestBody:
         content:
           'application/json':
@@ -239,7 +239,7 @@ paths:
           name: customer_id
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully deleted a customer
@@ -248,13 +248,13 @@ components:
     Order:
       properties:
         id:
-          type: string
+          type: integer
           description: Id of the order
         customer_id:
-          type: string
+          type: integer
           description: Id of the customer
         employee_id:
-          type: string
+          type: integer
           description: Id of the employee
         order_time:
           type: string
@@ -267,7 +267,7 @@ components:
           items:
             properties:
               order_item_id:
-                type: string
+                type: integer
                 description: Id of the order item
               name:
                 type: string
@@ -281,7 +281,7 @@ components:
     Customer:
       properties:
         id:
-          type: string
+          type: integer
           description: Id of the customer
         name:
           type: string
