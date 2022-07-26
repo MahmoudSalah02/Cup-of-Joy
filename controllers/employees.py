@@ -60,7 +60,7 @@ def read_one(employee_id):
     This function responds to a request for /api/employees/{employee_id}
     with one matching employee from the database
     :param employee_id: id of employee to find
-    :return: employee matching the id
+    :return: JSON object of the employee matching the id
     """
     existing_employee = (
         session.query(Employee).filter(Employee.id == employee_id)
@@ -80,8 +80,8 @@ def update(employee_id, body):
     """
     This function updates an existing employee in the database
     :param employee_id: id of employee to update
-    :param body: new changes to the employee
-    :return:
+    :param body: JSON object containing new changes to the employee
+    :return: JSON object of the employee updated
     """
     read_one(employee_id)
 
@@ -100,7 +100,7 @@ def delete(employee_id):
     """
     This function deletes an existing employee in the database
     :param employee_id: id of the employee to be deleted
-    :return:
+    :return: JSON object of the employee deleted
     """
     existing_employee = read_one(employee_id)
 

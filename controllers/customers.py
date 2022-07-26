@@ -12,7 +12,7 @@ def read_all():
     """
     This function responds to a request for /api/customers
     with the complete lists of customers
-    :return:        json string of list of customers
+    :return: array of JSON objects of all customers
     """
     # Create the list of customers from our data
     customers = session.query(Customer).order_by(Customer.name).all()
@@ -27,8 +27,8 @@ def create(body):
     """
     This function creates a new customer based on the customer
     data passed in
-    :param body:
-    :return:
+    :param body: JSON object containing new changes to customer
+    :return: JSON object of the new customer
     """
     existing_customer = (
         session.query(Customer).filter(Customer.contact_number == body.get("contact_number"))
@@ -59,7 +59,7 @@ def read_one(customer_id):
     This function responds to a request for /api/customers/{customer_id}
     with one matching customer from the database
     :param customer_id: id of customer to find
-    :return: customer matching the id
+    :return: JSON object of the customer matching the id
     """
     existing_customer = (
         session.query(Customer).filter(Customer.id == customer_id)
@@ -94,7 +94,7 @@ def update(customer_id, body):
     """
     This function updates an existing customer in the database
     :param customer_id: id of customer to update
-    :param body: new changes to the customer
+    :param body: JSON object containing new changes to customer
     :return:
     """
 
@@ -115,7 +115,7 @@ def delete(customer_id):
     """
     This function deletes an existing customer in the database
     :param customer_id: id of the customer to be deleted
-    :return:
+    :return: JSON object containing information about the customer deleted
     """
     existing_customer = read_one(customer_id)
 

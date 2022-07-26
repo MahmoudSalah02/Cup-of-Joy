@@ -12,11 +12,11 @@ paths:
     get:
       tags:
         - Order
-      summary: Read the entire set of orders
+      summary: Read all the orders
       operationId: controllers.orders.read_all
       responses:
         200:
-          description: Successfully read orders set operation
+          description: Successfully read all orders
           content:
             'application/json':
               schema:
@@ -30,12 +30,11 @@ paths:
         $ref: '#/components/requestBodies/createOrder'
       responses:
         200:
-          description: Successfully read orders set operation
+          description: Successfully created an order
           content:
             'application/json':
               schema:
                 $ref: '#/components/responses/Order'
-
   /orders/{order_id}:
     get:
       tags:
@@ -46,7 +45,7 @@ paths:
         - $ref: '#/components/parameters/orderId'
       responses:
         200:
-          description: Successfully read orders set operation
+          description: Successfully read an order
           content:
             'application/json':
               schema:
@@ -76,7 +75,7 @@ paths:
         - $ref: '#/components/parameters/orderId'
       responses:
         200:
-          description: Successfully updated an order
+          description: Successfully deleted an order
           content:
             application/json:
               schema:
@@ -97,7 +96,7 @@ paths:
     post:
       tags:
         - Customer
-      summary: Creates a new customer in the db
+      summary: Create a new customer
       operationId: controllers.customers.create
       requestBody:
         $ref: '#/components/requestBodies/createCustomer'
@@ -148,7 +147,7 @@ paths:
         - $ref: '#/components/parameters/customerId'
       responses:
         200:
-          description: Successfully updated a customer
+          description: Successfully deleted a customer
           content:
             application/json:
               schema:
@@ -163,7 +162,7 @@ paths:
         - $ref: '#/components/parameters/customerId'
       responses:
         200:
-          description: Successfully read a customer
+          description: Successfully read all customer's orders
           content:
             application/json:
               schema:
@@ -237,7 +236,7 @@ components:
               - contact_number
   responses:
     Order:
-      description: order
+      description: JSON object containing information about an order
       content:
         'application/json':
           schema:
@@ -282,7 +281,7 @@ components:
               - status
               - items_ordered
     Customer:
-      description: customer
+      description: JSON object containing an information about a customer
       content:
         'application/json':
           schema:

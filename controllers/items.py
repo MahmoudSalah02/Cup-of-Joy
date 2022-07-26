@@ -27,7 +27,7 @@ def create(body):
     """
     This function creates a new item based on the item
     data passed in
-    :param body: item to be created
+    :param body: JSON object of the item to be created
     :return: item created if request successful, error 409 otherwise
     """
     existing_item = (
@@ -59,7 +59,7 @@ def read_one(item_id):
     This function responds to a request for /api/items/{item_id}
     with one matching item from the database
     :param item_id: id of item to find
-    :return: item matching the id
+    :return: JSON object of the item matching the id
     """
     existing_item = (
         session.query(Item).filter(Item.id == item_id)
@@ -79,8 +79,8 @@ def update(item_id, body):
     """
     This function updates an existing item in the database
     :param item_id: id of item to update
-    :param body: new changes to the item
-    :return:
+    :param body: JSON object containing new changes to the specific item
+    :return: JSON object containing information about the item updated
     """
 
     read_one(item_id)
@@ -100,7 +100,7 @@ def delete(item_id):
     """
     This function deletes an existing item in the database
     :param item_id: id of the item to be deleted
-    :return:
+    :return: JSON object containing information about the item deleted
     """
     existing_item = read_one(item_id)
 

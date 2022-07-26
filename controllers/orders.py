@@ -69,7 +69,7 @@ def read_one(order_id):
     This function responds to a request for /api/orders/{order_id}
     with one matching order from the database
     :param order_id: id of order to find
-    :return: order matching the id
+    :return: JSON object of the order matching the id
     """
     existing_order = (
         session.query(Order).filter(Order.id == order_id)
@@ -88,8 +88,8 @@ def update(order_id, body):
     """
     This function updates an existing order in the database
     :param order_id: id of the oder to update
-    :param body: new changes to the order
-    :return:
+    :param body: JSON object containing new changes to the order
+    :return: JSON object of the updated order
     """
 
     if read_one(order_id) is None:
@@ -115,8 +115,8 @@ def update(order_id, body):
 def delete(order_id):
     """
     This function deletes an existing order in the database
-    :param order_id:
-    :return:
+    :param order_id: Id of the order to delete
+    :return: JSON object of the deleted order
     """
     existing_order = read_one(order_id)
 

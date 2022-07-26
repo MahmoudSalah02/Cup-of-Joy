@@ -39,7 +39,7 @@ paths:
     get:
       tags:
         - Employees
-      summary: Read an employee
+      summary: Read a specified employee
       operationId: controllers.employees.read_one
       parameters:
         - $ref: '#/components/parameters/employeeId'
@@ -61,7 +61,7 @@ paths:
         $ref: '#/components/requestBodies/createEmployee'
       responses:
         200:
-          description: Successfully read an employee
+          description: Successfully updated an employee
           content:
             application/json:
               schema:
@@ -75,7 +75,7 @@ paths:
         - $ref: '#/components/parameters/employeeId'
       responses:
         200:
-          description: Successfully read an employee
+          description: Successfully deleted an employee
           content:
             application/json:
               schema:
@@ -133,7 +133,7 @@ paths:
         $ref: '#/components/requestBodies/createItem'
       responses:
         200:
-          description: Successfully read an item
+          description: Successfully updated an item
           content:
             application/json:
               schema:
@@ -147,7 +147,7 @@ paths:
         - $ref: '#/components/parameters/itemId'
       responses:
         200:
-          description: Successfully read an item
+          description: Successfully deleted an item
           content:
             application/json:
               schema:
@@ -168,7 +168,7 @@ components:
         type: integer
   requestBodies:
     createEmployee:
-      description: create an employee
+      description: JSON object containing sufficient information to create an employee
       required: true
       content:
         'application/json':
@@ -187,7 +187,7 @@ components:
               - name
               - contact_number
     createItem:
-      description: create an item
+      description: JSON object containing information sufficient to create an item
       required: true
       content:
         'application/json':
@@ -207,7 +207,7 @@ components:
               - price
   responses:
     Employee:
-      description: employee
+      description: JSON object containing information about an employee
       content:
         'application/json':
           schema:
@@ -226,7 +226,7 @@ components:
                 type: string
                 description: Email of the employee
     Item:
-      description: employee
+      description: JSON object containing information about an item
       content:
         'application/json':
           schema:
