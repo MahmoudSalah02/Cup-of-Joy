@@ -113,4 +113,4 @@ def delete(item_id):
     # if the execution reaches this line, then existing item is not None
     session.delete(item_schema_deserialized)
     session.commit()
-    return make_response(f"Item {item_id} deleted", 200)
+    return existing_item

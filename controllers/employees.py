@@ -113,4 +113,4 @@ def delete(employee_id):
     # if the execution reaches this line, then existing employee is not None
     session.delete(employee_schema_deserialized)
     session.commit()
-    return make_response(f"Employee {employee_id} deleted", 200)
+    return existing_employee

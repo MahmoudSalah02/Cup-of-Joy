@@ -10,251 +10,237 @@ servers:
 paths:
   /employees:
     get:
-      operationId: controllers.employees.read_all
       tags:
         - Employees
       summary: Read all employees
+      operationId: controllers.employees.read_all
       responses:
         200:
           description: Successfully read all employees
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Employee'
+                $ref: '#/components/responses/Employee'
     post:
       tags:
         - Employees
       summary: Creates a new employee in the database
       operationId: controllers.employees.create
       requestBody:
-        content:
-          'application/json':
-            schema:
-              properties:
-                name:
-                  type: string
-                  description: Name of the employee
-                contact_number:
-                  type: integer
-                  description: Contact number of the employee
-                email:
-                  type: string
-                  description: Email of employee to create
-              required:
-                - name
-                - contact_number
+        $ref: '#/components/requestBodies/createEmployee'
       responses:
         200:
           description: Successfully created an employee
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Employee'
+                $ref: '#/components/responses/Employee'
   /employees/{employee_id}:
     get:
-      operationId: controllers.employees.read_one
       tags:
         - Employees
       summary: Read an employee
+      operationId: controllers.employees.read_one
       parameters:
-        - in: path
-          name: employee_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/employeeId'
       responses:
         200:
           description: Successfully read an employee
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Employee'
+                $ref: '#/components/responses/Employee'
     put:
-      operationId: controllers.employees.update
       tags:
         - Employees
       summary: Update an employee
+      operationId: controllers.employees.update
       parameters:
-        - in: path
-          name: employee_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/employeeId'
       requestBody:
-        content:
-          'application/json':
-            schema:
-              properties:
-                name:
-                  type: string
-                  description: Name of the employee
-                contact_number:
-                  type: integer
-                  description: Contact number of the employee
-                email:
-                  type: string
-                  description: Email of employee to create
-              required:
-                - name
-                - contact_number
+        $ref: '#/components/requestBodies/createEmployee'
       responses:
         200:
-          description: Successfully updated an employee
+          description: Successfully read an employee
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Employee'
+                $ref: '#/components/responses/Employee'
     delete:
-      operationId: controllers.employees.delete
       tags:
         - Employees
       summary: Delete an employee
+      operationId: controllers.employees.delete
       parameters:
-        - in: path
-          name: employee_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/employeeId'
       responses:
         200:
-          description: Successfully deleted an employee
+          description: Successfully read an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
   /items:
     get:
-      operationId: controllers.items.read_all
       tags:
         - Items
       summary: Read all items
+      operationId: controllers.items.read_all
       responses:
         200:
           description: Successfully read all items
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/responses/Item'
     post:
       tags:
         - Items
       summary: Create a new item
       operationId: controllers.items.create
       requestBody:
-        content:
-          'application/json':
-            schema:
-              properties:
-                name:
-                  type: string
-                  description: Name of the item
-                ingredients:
-                  type: string
-                  description: Ingredients of item
-                price:
-                  type: string
-                  description: Price of item
-              required:
-                - name
-                - price
+        $ref: '#/components/requestBodies/createItem'
       responses:
         200:
           description: Successfully created an item
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/responses/Item'
   /items/{item_id}:
     get:
-      operationId: controllers.items.read_one
       tags:
         - Items
       summary: Read an item
+      operationId: controllers.items.read_one
       parameters:
-        - in: path
-          name: item_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/itemId'
       responses:
         200:
           description: Successfully read an item
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/responses/Item'
     put:
-      operationId: controllers.items.update
       tags:
         - Items
       summary: Update an item
+      operationId: controllers.items.update
       parameters:
-        - in: path
-          name: item_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/itemId'
       requestBody:
-        content:
-          'application/json':
-            schema:
-              properties:
-                name:
-                  type: string
-                  description: Name of the item
-                ingredients:
-                  type: string
-                  description: Ingredients of item
-                price:
-                  type: string
-                  description: Price of item
-              required:
-                - name
-                - price
+        $ref: '#/components/requestBodies/createItem'
       responses:
         200:
-          description: Sucessfully updated an item
+          description: Successfully read an item
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: '#/components/responses/Item'
     delete:
-      operationId: controllers.items.delete
       tags:
         - Items
       summary: Delete an item
+      operationId: controllers.items.delete
       parameters:
-        - in: path
-          name: item_id
-          required: true
-          schema:
-            type: integer
+        - $ref: '#/components/parameters/itemId'
       responses:
         200:
-          description: Successfully deleted an item
+          description: Successfully read an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
 components:
-  schemas:
+  parameters:
+    employeeId:
+      in: path
+      name: employee_id
+      required: true
+      schema:
+        type: integer
+    itemId:
+      in: path
+      name: item_id
+      required: true
+      schema:
+        type: integer
+  requestBodies:
+    createEmployee:
+      description: create an employee
+      required: true
+      content:
+        'application/json':
+          schema:
+            properties:
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of employee to create
+            required:
+              - name
+              - contact_number
+    createItem:
+      description: create an item
+      required: true
+      content:
+        'application/json':
+          schema:
+            properties:
+              name:
+                type: string
+                description: Name of the item
+              ingredients:
+                type: string
+                description: Ingredients of item
+              price:
+                type: string
+                description: Price of item
+            required:
+              - name
+              - price
+  responses:
     Employee:
-      properties:
-        id:
-          type: integer
-          description: Id of the employee
-        name:
-          type: string
-          description: Name of the employee
-        contact_number:
-          type: integer
-          description: Contact number of the employee
-        email:
-          type: string
-          description: Email of the employee
+      description: employee
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the employee
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of the employee
     Item:
-      properties:
-        id:
-          type: integer
-          description: Id of the item
-        name:
-          type: string
-          description: Name of the item
-        ingredients:
-          type: string
-          description: Ingredients of item
-        price:
-          type: string
-          description: Price of item
+      description: employee
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the item
+              name:
+                type: string
+                description: Name of the item
+              ingredients:
+                type: string
+                description: Ingredients of item
+              price:
+                type: string
+                description: Price of item

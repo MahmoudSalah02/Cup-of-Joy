@@ -3,7 +3,7 @@ This is the orders module and supports all the REST actions for the
 Order table
 """
 
-from flask import abort, make_response
+from flask import abort
 from decimal import Decimal
 from controllers import customers, employees
 from models.models import Order, session
@@ -22,7 +22,6 @@ def read_all():
     # Serialize the data for the response
     order_schema = OrderSchema(many=True)
     orders_data = order_schema.dump(orders)
-    print(orders_data)
     return orders_data
 
 
@@ -128,4 +127,4 @@ def delete(order_id):
     # if the execution reaches this line, then existing order is not None
     session.delete(existing_order_deserialized)
     session.commit()
-    return make_response(f"Order {order_id} deleted", 200)
+    return existing_order

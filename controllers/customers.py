@@ -3,7 +3,7 @@ This is the customers module and supports all the REST actions for the
 Customer table
 """
 
-from flask import abort, make_response
+from flask import abort
 from models.models import Customer, session
 from models.schemas import CustomerSchema
 
@@ -112,4 +112,4 @@ def delete(customer_id):
     # if the execution reaches this line, then existing customer is not None
     session.delete(customer_schema_deserialized)
     session.commit()
-    return make_response(f"Customer {customer_id} deleted", 200)
+    return existing_customer
