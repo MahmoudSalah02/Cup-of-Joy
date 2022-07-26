@@ -153,6 +153,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/Customer'
+  /customers/{customer_id}/orders:
+    get:
+      tags:
+        - Customer
+      summary: Read a customer orders
+      operationId: controllers.customers.read_orders
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        200:
+          description: Successfully read a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Order'
 components:
   parameters:
     orderId:

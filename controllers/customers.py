@@ -5,7 +5,7 @@ Customer table
 
 from flask import abort
 from models.models import Customer, session
-from models.schemas import CustomerSchema
+from models.schemas import CustomerSchema, OrderSchema
 
 
 def read_all():
@@ -73,6 +73,21 @@ def read_one(customer_id):
 
     else:
         abort(404, f"Customer not found for Id: {customer_id}")
+
+
+def read_orders(customer_id):
+    """
+    This function returns all the order of the customer specified
+    :param customer_id: id of the customer who placed orders
+    :return: orders of the customer with the specified id
+    """
+    existing_customer = read_one(customer_id)
+    customer_schema = CustomerSchema()
+    existing_customer_deserialized = customer_schema.load(existing_customer, session=session)
+
+    order_schema = OrderSchema(many=True)
+    orders_data = order_schema.dump(existing_customer_deserialized.orders_placed)
+    return orders_data
 
 
 def update(customer_id, body):
