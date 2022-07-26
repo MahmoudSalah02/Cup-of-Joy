@@ -16,7 +16,7 @@ def home():
     localhost:5000/
     :return:        the rendered template "home.html"
     """
-    return render_template("about.html")
+    return "Connected"
 
 
 if __name__ == "__main__":
