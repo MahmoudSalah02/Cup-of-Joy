@@ -83,19 +83,17 @@ def update(item_id, body):
     :return:
     """
 
-    existing_item = read_one(item_id)
-    existing_item["name"] = body.get("name")
-    existing_item["price"] = body.get("price")
-    existing_item["ingredients"] = body.get("ingredients")
+    read_one(item_id)
 
     # deserialize data into a database object
     item_schema = ItemSchema()
-    existing_item_deserialized = item_schema.load(existing_item, session=session)
+    existing_item_deserialized = item_schema.load(body, session=session)
 
     session.merge(existing_item_deserialized)
     session.commit()
 
-    return existing_item, 200
+    body["item_id"] = item_id
+    return body, 200
 
 
 def delete(item_id):

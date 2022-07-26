@@ -3,7 +3,8 @@ This is the employees module and supports all the REST actions for the
 Employee table
 """
 
-from flask import abort, make_response
+from flask import abort
+
 from models.models import Employee, session
 from models.schemas import EmployeeSchema
 
@@ -79,23 +80,20 @@ def update(employee_id, body):
     """
     This function updates an existing employee in the database
     :param employee_id: id of employee to update
-    :param employee: new changes to the employee
+    :param body: new changes to the employee
     :return:
     """
-
-    existing_employee = read_one(employee_id)
-    existing_employee["name"] = body.get("name")
-    existing_employee["contact_number"] = body.get("contact_number")
-    existing_employee["email"] = body.get("email")
+    read_one(employee_id)
 
     # deserialize data into a database object
     employee_schema = EmployeeSchema()
-    existing_employee_deserialized = employee_schema.load(existing_employee, session=session)
+    existing_employee_deserialized = employee_schema.load(body, session=session)
 
     session.merge(existing_employee_deserialized)
     session.commit()
 
-    return existing_employee, 200
+    body["id"] = employee_id
+    return body, 200
 
 
 def delete(employee_id):

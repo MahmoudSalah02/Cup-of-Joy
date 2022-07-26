@@ -83,18 +83,17 @@ def update(customer_id, body):
     :return:
     """
 
-    existing_customer = read_one(customer_id)
-    existing_customer["name"] = body.get("name")
-    existing_customer["contact_number"] = body.get("contact_number")
+    read_one(customer_id)
 
     # deserialize data into a database object
     customer_schema = CustomerSchema()
-    existing_customer_deserialized = customer_schema.load(existing_customer, session=session)
+    existing_customer_deserialized = customer_schema.load(body, session=session)
 
     session.merge(existing_customer_deserialized)
     session.commit()
 
-    return existing_customer, 200
+    body["customer_id"] = customer_id
+    return body, 200
 
 
 def delete(customer_id):
