@@ -3,7 +3,6 @@ This is the items module and supports all the REST actions for the
 Item table
 """
 
-from flask import abort, make_response
 from models.models import Item, session
 from models.schemas import ItemSchema
 
@@ -51,7 +50,7 @@ def create(body):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Item {body.get('name')} exists already")
+        return {"error": f"Item {body.get('name')} already exists"}, 404
 
 
 def read_one(item_id):
@@ -72,7 +71,7 @@ def read_one(item_id):
         return item_data_serialized
 
     else:
-        abort(404, f"Item not found for Id: {item_id}")
+        return {"error": f"Item not found for id: {item_id}"}, 404
 
 
 def update(item_id, body):

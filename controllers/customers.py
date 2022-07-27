@@ -3,7 +3,6 @@ This is the customers module and supports all the REST actions for the
 Customer table
 """
 
-from flask import abort
 from models.models import Customer, session
 from models.schemas import CustomerSchema, OrderSchema
 
@@ -51,7 +50,7 @@ def create(body):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Customer {body.get('name')} exists already")
+        return {"error": f"Customer {body.get('name')} exists already"}, 404
 
 
 def read_one(customer_id):
@@ -72,7 +71,7 @@ def read_one(customer_id):
         return customer_data_serialized
 
     else:
-        abort(404, f"Customer not found for Id: {customer_id}")
+        return {"error": f"Customer not found for Id: {customer_id}"}, 404
 
 
 def read_orders(customer_id):

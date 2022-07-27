@@ -3,7 +3,6 @@ This is the orders module and supports all the REST actions for the
 Order table
 """
 
-from flask import abort
 from decimal import Decimal
 from controllers import customers, employees
 from models.models import Order, session
@@ -33,10 +32,10 @@ def create(body):
     :return:       201 on success, 406 on person exists
     """
     if customers.read_one(body.get("customer_id")) is None:
-        abort(404, f"Customer not found for Id: {body.get('customer_id')}")
+        return {"error": f"Order not found for Id: {body.get('customer_id')}"}, 404
 
     if employees.read_one(body.get("employee_id")) is None:
-        abort(404, f"Employee not found for Id: {body.get('employee_id')}")
+        return {"error": f"Order not found for Id: {body.get('employee_id')}"}, 404
 
     order_schema = OrderSchema()
     new_order_deserialized = order_schema.load(body, session=session)
@@ -81,7 +80,7 @@ def read_one(order_id):
         order_data_serialized = order_schema.dump(existing_order)
         return order_data_serialized
     else:
-        abort(404, f"Order not found for Id: {order_id}")
+        return {"error": f"Order not found for Id: {order_id}"}, 404
 
 
 def update(order_id, body):
@@ -93,13 +92,13 @@ def update(order_id, body):
     """
 
     if read_one(order_id) is None:
-        abort(404, f"Order not found for Id: {order_id}")
+        return {"error": f"Order not found for Id: {order_id}"}, 404
 
     if customers.read_one(body.get("customer_id")) is None:
-        abort(404, f"Customer not found for Id: {body.get('customer_id')}")
+        return {"error": f"Order not found for Id: {body.get('customer_id')}"}, 404
 
     if employees.read_one(body.get("employee_id")) is None:
-        abort(404, f"Employee not found for Id: {body.get('employee_id')}")
+        return {"error": f"Employee not found for Id: {body.get('employee_id')}"}, 404
 
     body["id"] = order_id
     order_schema = OrderSchema()
@@ -115,7 +114,7 @@ def update(order_id, body):
 def delete(order_id):
     """
     This function deletes an existing order in the database
-    :param order_id: Id of the order to delete
+    :param order_id: ID of the order to delete
     :return: JSON object of the deleted order
     """
     existing_order = read_one(order_id)

@@ -3,8 +3,6 @@ This is the employees module and supports all the REST actions for the
 Employee table
 """
 
-from flask import abort
-
 from models.models import Employee, session
 from models.schemas import EmployeeSchema
 
@@ -52,7 +50,7 @@ def create(body):
 
     # otherwise, person exists already
     else:
-        abort(409, f"Employee {body.get('name')} exists already")
+        return {"error": f"Employee {body.get('name')} already exists"}, 404
 
 
 def read_one(employee_id):
@@ -73,7 +71,7 @@ def read_one(employee_id):
         return employee_data_serialized
 
     else:
-        abort(404, f"Employee not found for Id: {employee_id}")
+        return {"error": f"Employee not found for id: {employee_id}"}, 404
 
 
 def update(employee_id, body):

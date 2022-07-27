@@ -152,6 +152,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/Item'
+  /payments:
+    get:
+      tags:
+        - Items
+      summary: Read all items
+      operationId: controllers.payments.read_all
+      responses:
+        200:
+          description: Successfully read all items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Payment'
+  /payments/{order_id}:
+    get:
+      tags:
+        - Payments
+      summary: Read a payment receipt
+      operationId: controllers.payments.read_one
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        200:
+          description: Successfully read a payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Payment'
 components:
   parameters:
     employeeId:
@@ -163,6 +191,12 @@ components:
     itemId:
       in: path
       name: item_id
+      required: true
+      schema:
+        type: integer
+    orderId:
+      in: path
+      name: order_id
       required: true
       schema:
         type: integer
@@ -244,3 +278,22 @@ components:
               price:
                 type: string
                 description: Price of item
+    Payment:
+      description: JSON object containing information about a payment
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              order_id:
+                type: integer
+                description: Id of an order
+              customer_id:
+                type: integer
+                description: Id of the customer
+              employee_id:
+                type: integer
+                description: Id of the employee
+              price:
+                type: number
+                description: Total price of the order

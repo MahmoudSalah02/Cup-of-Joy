@@ -1,4 +1,4 @@
-from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field, fields
+from marshmallow_sqlalchemy import SQLAlchemySchema, SQLAlchemyAutoSchema, auto_field, fields
 from models.models import *
 
 
@@ -70,14 +70,9 @@ class ItemSchema(SQLAlchemySchema):
     ingredients = auto_field()
 
 
-class PaymentSchema(SQLAlchemySchema):
+class PaymentSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Payment
         include_fk = True
         load_instance = True
         include_relationships = True
-
-    order_id = auto_field()
-    customer_id = auto_field()
-    employee_id = auto_field()
-    price = auto_field()
