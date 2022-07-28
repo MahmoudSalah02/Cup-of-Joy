@@ -1,0 +1,299 @@
+openapi: 3.0.0
+info:
+  title: operations APIs
+  description: service openapi definition
+  version: "1.0.0"
+  contact:
+    email: mahmouds343@gmail.com
+servers:
+  - url: /operations
+paths:
+  /employees:
+    get:
+      tags:
+        - Employees
+      summary: Read all employees
+      operationId: controllers.employees.read_all
+      responses:
+        200:
+          description: Successfully read all employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
+    post:
+      tags:
+        - Employees
+      summary: Creates a new employee in the database
+      operationId: controllers.employees.create
+      requestBody:
+        $ref: '#/components/requestBodies/createEmployee'
+      responses:
+        200:
+          description: Successfully created an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
+  /employees/{employee_id}:
+    get:
+      tags:
+        - Employees
+      summary: Read a specified employee
+      operationId: controllers.employees.read_one
+      parameters:
+        - $ref: '#/components/parameters/employeeId'
+      responses:
+        200:
+          description: Successfully read an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
+    put:
+      tags:
+        - Employees
+      summary: Update an employee
+      operationId: controllers.employees.update
+      parameters:
+        - $ref: '#/components/parameters/employeeId'
+      requestBody:
+        $ref: '#/components/requestBodies/createEmployee'
+      responses:
+        200:
+          description: Successfully updated an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
+    delete:
+      tags:
+        - Employees
+      summary: Delete an employee
+      operationId: controllers.employees.delete
+      parameters:
+        - $ref: '#/components/parameters/employeeId'
+      responses:
+        200:
+          description: Successfully deleted an employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Employee'
+  /items:
+    get:
+      tags:
+        - Items
+      summary: Read all items
+      operationId: controllers.items.read_all
+      responses:
+        200:
+          description: Successfully read all items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
+    post:
+      tags:
+        - Items
+      summary: Create a new item
+      operationId: controllers.items.create
+      requestBody:
+        $ref: '#/components/requestBodies/createItem'
+      responses:
+        200:
+          description: Successfully created an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
+  /items/{item_id}:
+    get:
+      tags:
+        - Items
+      summary: Read an item
+      operationId: controllers.items.read_one
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      responses:
+        200:
+          description: Successfully read an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
+    put:
+      tags:
+        - Items
+      summary: Update an item
+      operationId: controllers.items.update
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      requestBody:
+        $ref: '#/components/requestBodies/createItem'
+      responses:
+        200:
+          description: Successfully updated an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
+    delete:
+      tags:
+        - Items
+      summary: Delete an item
+      operationId: controllers.items.delete
+      parameters:
+        - $ref: '#/components/parameters/itemId'
+      responses:
+        200:
+          description: Successfully deleted an item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Item'
+  /payments:
+    get:
+      tags:
+        - Items
+      summary: Read all items
+      operationId: controllers.payments.read_all
+      responses:
+        200:
+          description: Successfully read all items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Payment'
+  /payments/{order_id}:
+    get:
+      tags:
+        - Payments
+      summary: Read a payment receipt
+      operationId: controllers.payments.read_one
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        200:
+          description: Successfully read a payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Payment'
+components:
+  parameters:
+    employeeId:
+      in: path
+      name: employee_id
+      required: true
+      schema:
+        type: integer
+    itemId:
+      in: path
+      name: item_id
+      required: true
+      schema:
+        type: integer
+    orderId:
+      in: path
+      name: order_id
+      required: true
+      schema:
+        type: integer
+  requestBodies:
+    createEmployee:
+      description: JSON object containing sufficient information to create an employee
+      required: true
+      content:
+        'application/json':
+          schema:
+            properties:
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of employee to create
+            required:
+              - name
+              - contact_number
+    createItem:
+      description: JSON object containing information sufficient to create an item
+      required: true
+      content:
+        'application/json':
+          schema:
+            properties:
+              name:
+                type: string
+                description: Name of the item
+              ingredients:
+                type: string
+                description: Ingredients of item
+              price:
+                type: string
+                description: Price of item
+            required:
+              - name
+              - price
+  responses:
+    Employee:
+      description: JSON object containing information about an employee
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the employee
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of the employee
+    Item:
+      description: JSON object containing information about an item
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the item
+              name:
+                type: string
+                description: Name of the item
+              ingredients:
+                type: string
+                description: Ingredients of item
+              price:
+                type: string
+                description: Price of item
+    Payment:
+      description: JSON object containing information about a payment
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              order_id:
+                type: integer
+                description: Id of an order
+              customer_id:
+                type: integer
+                description: Id of the customer
+              employee_id:
+                type: integer
+                description: Id of the employee
+              price:
+                type: number
+                description: Total price of the order

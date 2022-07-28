@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  title: operations APIs
+  description: service openapi definition
+  version: "1.0.0"
+  contact:
+    email: mahmouds343@gmail.com
+servers:
+  - url: /shop
+paths:
+  /orders:
+    get:
+      tags:
+        - Order
+      summary: Read all the orders
+      operationId: controllers.orders.read_all
+      responses:
+        200:
+          description: Successfully read all orders
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/responses/Order'
+    post:
+      tags:
+        - Order
+      summary: Create an order
+      operationId: controllers.orders.create
+      requestBody:
+        $ref: '#/components/requestBodies/createOrder'
+      responses:
+        200:
+          description: Successfully created an order
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/responses/Order'
+  /orders/{order_id}:
+    get:
+      tags:
+        - Order
+      summary: Read an order
+      operationId: controllers.orders.read_one
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        200:
+          description: Successfully read an order
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/responses/Order'
+    put:
+      tags:
+        - Order
+      summary: Update an order
+      operationId: controllers.orders.update
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      requestBody:
+        $ref: '#/components/requestBodies/createOrder'
+      responses:
+        200:
+          description: Successfully updated an order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Order'
+    delete:
+      tags:
+        - Order
+      summary: Delete an order
+      operationId: controllers.orders.delete
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        200:
+          description: Successfully deleted an order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Order'
+  /customers:
+    get:
+      tags:
+        - Customer
+      summary: Read all customer
+      operationId: controllers.customers.read_all
+      responses:
+        200:
+          description: Successfully read all customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Customer'
+    post:
+      tags:
+        - Customer
+      summary: Create a new customer
+      operationId: controllers.customers.create
+      requestBody:
+        $ref: '#/components/requestBodies/createCustomer'
+      responses:
+        200:
+          description: Successfully created a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Customer'
+  /customers/{customer_id}:
+    get:
+      tags:
+        - Customer
+      summary: Read a customer
+      operationId: controllers.customers.read_one
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        200:
+          description: Successfully read a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Customer'
+    put:
+      tags:
+        - Customer
+      summary: Update a customer
+      operationId: controllers.customers.update
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      requestBody:
+        $ref: '#/components/requestBodies/createCustomer'
+      responses:
+        200:
+          description: Successfully updated a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Customer'
+    delete:
+      tags:
+        - Customer
+      summary: Delete a customer
+      operationId: controllers.customers.delete
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        200:
+          description: Successfully deleted a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Customer'
+  /customers/{customer_id}/orders:
+    get:
+      tags:
+        - Customer
+      summary: Read a customer orders
+      operationId: controllers.customers.read_orders
+      parameters:
+        - $ref: '#/components/parameters/customerId'
+      responses:
+        200:
+          description: Successfully read all customer's orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Order'
+components:
+  parameters:
+    orderId:
+      in: path
+      name: order_id
+      required: true
+      schema:
+        type: integer
+    customerId:
+      in: path
+      name: customer_id
+      required: true
+      schema:
+        type: integer
+  requestBodies:
+    createOrder:
+      description: A JSON object containing information for creating an order
+      required: True
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customer_id:
+                type: integer
+                description: Id of customer
+              employee_id:
+                type: integer
+                description: Id of employee
+              status:
+                type: string
+                description: Status of the order
+              items_ordered:
+                type: array
+                items:
+                  properties:
+                    item_id:
+                      type: integer
+                      description: Id of item on menu
+                    quantity:
+                      type: integer
+                      description: Quantity of item
+                    customer_notes:
+                      type: string
+                      description: Notes of customer
+            required:
+              - customer_id
+              - employee_id
+              - status
+              - items_ordered
+    createCustomer:
+      description: A JSON object containing information for creating a customer
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the customer
+              contact_number:
+                type: integer
+                description: Contact number of the customer
+            required:
+              - name
+              - contact_number
+  responses:
+    Order:
+      description: JSON object containing information about an order
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the order
+              customer_id:
+                type: integer
+                description: Id of the customer
+              employee_id:
+                type: integer
+                description: Id of the employee
+              order_time:
+                type: string
+                description: Creation/Update timestamp of the order
+              status:
+                type: string
+                description: state of the order (Ready, Preparing, or Cancelled)
+              items_ordered:
+                type: array
+                items:
+                  properties:
+                    order_item_id:
+                      type: integer
+                      description: Id of the order item
+                    name:
+                      type: string
+                      description: Name of the order item
+                    quantity:
+                      type: integer
+                      description: Quantity of the order item
+                    customer_notes:
+                      type: string
+                      description: Notes of customer
+            required:
+              - id
+              - customer_id
+              - employee_id
+              - order_time
+              - status
+              - items_ordered
+    Customer:
+      description: JSON object containing an information about a customer
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the customer
+              name:
+                type: string
+                description: Name of the customer
+              contact_number:
+                type: integer
+                description: Contact number of the customer
+            required:
+              - id
+              - name
+              - contact_number
