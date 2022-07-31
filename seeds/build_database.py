@@ -1,4 +1,5 @@
-from models.models import session, Customer, Order, OrderItem, Payment, Employee, Item
+from models.models import Customer, Order, OrderItem, Payment, Employee, Item
+from init_db import session
 from seeds.data import MENU, CUSTOMERS
 from datetime import datetime
 

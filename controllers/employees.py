@@ -3,7 +3,8 @@ This is the employees module and supports all the REST actions for the
 Employee table
 """
 
-from models.models import Employee, session
+from models.models import Employee
+from init_db import session
 from models.schemas import EmployeeSchema
 
 

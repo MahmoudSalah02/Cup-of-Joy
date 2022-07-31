@@ -3,7 +3,8 @@ This is the items module and supports all the REST actions for the
 Item table
 """
 
-from models.models import Item, session
+from models.models import Item
+from init_db import session
 from models.schemas import ItemSchema
 
 

@@ -7,12 +7,12 @@ ROLE_MAPPING = {
     "/operation": ["manager"],
 }
 
-ROOT_PATH = Path(__file__).parent.parent
-sql_url = "sqlite:///" + str(ROOT_PATH).replace("src", "").replace("\\", "\\\\") + "\\\\cafe.db"
-engine = create_engine(sql_url)
-
-# the scoped_session() function is provided which produces a thread-managed registry of Session objects
-session = scoped_session(sessionmaker(bind=engine))
+# ROOT_PATH = Path(__file__).parent.parent
+# sql_url = "sqlite:///" + str(ROOT_PATH).replace("src", "").replace("\\", "\\\\") + "\\\\cafe.db"
+# engine = create_engine(sql_url)
+#
+# # the scoped_session() function is provided which produces a thread-managed registry of Session objects
+# session = scoped_session(sessionmaker(bind=engine))
 
 # TODO: write config in this format
 # import os

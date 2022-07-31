@@ -1,4 +1,5 @@
-from models.models import session, Employee
+from models.models import Employee
+from init_db import session
 from models.schemas import EmployeeSchema
 
 
@@ -8,9 +9,8 @@ def process_registration_request(body):
     :param body:
     :return:
     """
-    print("---IN REGISTRATION---")
     # check if username exists in employee table
-    if Employee.find_by_username(body.get("username")):
+    if find_by_username(body.get("username")):
         return {"error": f"{body.get('username')} already exists"}
 
     # gather employee info in a dictionary
@@ -43,7 +43,7 @@ def process_login_request(body):
     """
 
     # find the employee instance in the db
-    existing_employee = Employee.find_by_username(body.get("username"))
+    existing_employee = find_by_username(body.get("username"))
 
     # return an error if username is not found or password is incorrect, otherwise, login
     if not existing_employee or not existing_employee.check_password(body.get("password")):
@@ -51,3 +51,12 @@ def process_login_request(body):
 
     # generate new access token
     return {"access_token": existing_employee.encode_access_token()}
+
+
+def find_by_username(username):
+    """
+    This function finds the user with a matching username
+    :param username: username of the user to find
+    :return: user with matching username
+    """
+    return session.query(Employee).filter(Employee.username == username).one_or_none()

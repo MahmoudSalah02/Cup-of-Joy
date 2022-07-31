@@ -3,12 +3,11 @@ from datetime import timedelta
 
 from bcrypt import hashpw, checkpw, gensalt
 from jwt import encode, decode
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from config.config import *
-
+# TODO: error when you this file is imported from inside /seeds/
 PRIVATE_KEY = open('jwt-key').read()
 PUBLIC_KEY = open('jwt-key.pub').read()
 ALGORITHM = "RS256"
@@ -65,7 +64,7 @@ class Employee(Base):
                                  back_populates="employee")
     username = Column(String(64), unique=True)
     role = Column(String(64))
-    password = Column(String(64))
+    password = Column(LargeBinary)
 
     def __repr__(self):
         """
@@ -126,15 +125,6 @@ class Employee(Base):
         """
         return decode(access_token, PUBLIC_KEY, algorithms=ALGORITHM)
 
-    @staticmethod
-    def find_by_username(username):
-        """
-        This function finds the user with a matching username
-        :param username: username of the user to find
-        :return: user with matching username
-        """
-        return session.query(Employee).filter(Employee.username == username).one_or_none()
-
 
 class Item(Base):
     __tablename__ = "item"
@@ -177,6 +167,3 @@ class OrderItem(Base):
     def __repr__(self):
         return "<Order(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
             self.order_id, self.item_id, self.quantity, self.customer_notes)
-
-
-Base.metadata.create_all(engine)
