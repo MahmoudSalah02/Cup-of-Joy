@@ -3,9 +3,12 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
+from bcrypt import hashpw, checkpw, gensalt
+from jwt import encode, decode, ExpiredSignatureError, InvalidTokenError
 from config.config import *
 
+PUBLIC_KEY = "secret"
+ALGORITHM = "HS256"
 Base = declarative_base()
 
 
@@ -56,10 +59,96 @@ class Employee(Base):
     email = Column(String(64), nullable=True, unique=True)
     orders_served = relationship('Order',
                                  back_populates="employee")
+    username = Column(String(64), unique=True)
+    role = Column(String(64))
+    password = Column(String(64))
 
     def __repr__(self):
+        """
+
+        :return:
+        """
         return "<Order(name='%s', contact_number='%s', email='%s')>" % (
             self.name, self.contact_number, self.email)
+
+    # TODO: do I need a whole method for this??
+    def set_username(self, username):
+        """
+        This function sets the username of an employee
+        :return:
+        """
+        self.username = username
+
+    # TODO: is there a @setter thingy?
+    def set_hash_password(self, new_password):
+        """
+        This function takes a string representing the new password and
+        stores it in the db hashed
+        :param new_password: string representing the new password
+        :return: true if the operation is successful
+        """
+        new_password_as_bytes = str.encode(new_password)
+        hashed_password = hashpw(new_password_as_bytes, gensalt())
+        self.password = hashed_password
+
+        # TODO: should I return true or None?
+        return True
+
+    def check_password(self, unchecked_password):
+        """
+        This function returns true if the input password is equal to the password
+        stores in the db, false otherwise
+        :param unchecked_password: string representing the password to be checked
+        :return: True if the unchecked password matches the password in the db, False otherwise
+        """
+        unchecked_password_as_bytes = str.encode(unchecked_password)
+        return checkpw(unchecked_password_as_bytes, self.password)
+
+    def encode_access_token(self):
+        """
+        This function creates and returns an encoded access token
+        :return: string representing an encoded access token
+        """
+        payload = {
+            "username": self.username,
+            "iat": datetime.now(),
+            "role": self.role
+        }
+        return encode(payload, PUBLIC_KEY, algorithm=ALGORITHM)
+
+    @staticmethod
+    def decode_access_token(access_token):
+        """
+
+        :param access_token:
+        :return:
+        """
+
+        payload = decode(access_token, PUBLIC_KEY, algorithms=ALGORITHM)
+        return {
+            "username": payload.get("username"),
+            "iat": datetime.now(),
+            "role": payload.get("role"),
+            "access_token": access_token
+        }
+
+        # TODO: should I create exceptions like this:
+        # try:
+        # except ExpiredSignatureError:
+        #     error = "Access token expired. Please log in again."
+        #     return {"error": error}
+        # except InvalidTokenError:
+        #     error = "Invalid token. Please log in again."
+        #     return {"error": error}
+
+    @staticmethod
+    def find_by_username(username):
+        """
+        This function finds the user with a matching username
+        :param username: username of the user to find
+        :return: user with matching username
+        """
+        return session.query(Employee).filter(Employee.username == username).one_or_none()
 
 
 class Item(Base):

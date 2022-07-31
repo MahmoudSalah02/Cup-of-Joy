@@ -6,7 +6,7 @@ info:
   contact:
     email: mahmouds343@gmail.com
 servers:
-  - url: /operations
+  - url: /operation
 paths:
   /employees:
     get:

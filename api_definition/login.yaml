@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: login API
+  description: API endpoints to login and register
+  version: 1.0.0
+servers:
+  - url: '/'
+paths:
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login using credentials
+      operationId: auth.login.process_login_request
+      requestBody:
+        $ref: '#/components/requestBodies/credentials'
+      responses:
+        200:
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/accessToken'
+  /register:
+    post:
+      tags:
+        - Register
+      summary: Register a new user
+      operationId: auth.login.process_registration_request
+      requestBody:
+        $ref: '#/components/requestBodies/employeeInformation'
+      responses:
+        200:
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/accessToken'
+components:
+  requestBodies:
+    credentials:
+      description: JSON object containing username and password
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: Username of ths user
+              password:
+                type: string
+                description: Password of the user
+            required:
+              - username
+              - password
+    employeeInformation:
+      description: JSON object containing username and password
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of the employee
+              username:
+                type: string
+                description: Username of ths user
+              password:
+                type: string
+                description: Password of the user
+            required:
+              - username
+              - password
+  responses:
+    accessToken:
+      description: JSON object containing the access token
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                description: Access token of the user
+              message:
+                type: string
+                description: Message returned
+            required:
+              - access_token
+
+
