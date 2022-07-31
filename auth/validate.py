@@ -7,8 +7,6 @@ def validate_token():
     """
     This function validates an access token and checks
     roles and permissions accordingly
-
-    TODO: what does it return? exceptions? None?
     :return:
     """
     # Authorization header is not required for login and registration
@@ -27,7 +25,7 @@ def validate_token():
         if is_allowed:
             return None
         else:
-            return {"error": "user not allowed (roles)"}
+            return {"error": "employee not authorized"}
 
 
 def check_roles(request_url, role):
@@ -43,7 +41,6 @@ def check_roles(request_url, role):
     elif "/operation" in request_url:
         return role in ROLE_MAPPING.get("/operation")
 
-    # TODO: return an exception? or just false?
     return False
 
 

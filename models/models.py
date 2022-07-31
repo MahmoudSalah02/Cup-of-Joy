@@ -1,14 +1,18 @@
 from datetime import datetime
+from datetime import timedelta
 
+from bcrypt import hashpw, checkpw, gensalt
+from jwt import encode, decode
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from bcrypt import hashpw, checkpw, gensalt
-from jwt import encode, decode, ExpiredSignatureError, InvalidTokenError
+
 from config.config import *
 
-PUBLIC_KEY = "secret"
-ALGORITHM = "HS256"
+PRIVATE_KEY = open('jwt-key').read()
+PUBLIC_KEY = open('jwt-key.pub').read()
+ALGORITHM = "RS256"
+
 Base = declarative_base()
 
 
@@ -71,7 +75,6 @@ class Employee(Base):
         return "<Order(name='%s', contact_number='%s', email='%s')>" % (
             self.name, self.contact_number, self.email)
 
-    # TODO: do I need a whole method for this??
     def set_username(self, username):
         """
         This function sets the username of an employee
@@ -79,7 +82,6 @@ class Employee(Base):
         """
         self.username = username
 
-    # TODO: is there a @setter thingy?
     def set_hash_password(self, new_password):
         """
         This function takes a string representing the new password and
@@ -90,9 +92,6 @@ class Employee(Base):
         new_password_as_bytes = str.encode(new_password)
         hashed_password = hashpw(new_password_as_bytes, gensalt())
         self.password = hashed_password
-
-        # TODO: should I return true or None?
-        return True
 
     def check_password(self, unchecked_password):
         """
@@ -110,11 +109,13 @@ class Employee(Base):
         :return: string representing an encoded access token
         """
         payload = {
+            'exp': datetime.utcnow() + timedelta(days=1),
+            "iat": datetime.utcnow(),
+            "sub": self.id,
             "username": self.username,
-            "iat": datetime.now(),
-            "role": self.role
+            "role": self.role,
         }
-        return encode(payload, PUBLIC_KEY, algorithm=ALGORITHM)
+        return encode(payload, PRIVATE_KEY, algorithm=ALGORITHM)
 
     @staticmethod
     def decode_access_token(access_token):
@@ -123,23 +124,7 @@ class Employee(Base):
         :param access_token:
         :return:
         """
-
-        payload = decode(access_token, PUBLIC_KEY, algorithms=ALGORITHM)
-        return {
-            "username": payload.get("username"),
-            "iat": datetime.now(),
-            "role": payload.get("role"),
-            "access_token": access_token
-        }
-
-        # TODO: should I create exceptions like this:
-        # try:
-        # except ExpiredSignatureError:
-        #     error = "Access token expired. Please log in again."
-        #     return {"error": error}
-        # except InvalidTokenError:
-        #     error = "Invalid token. Please log in again."
-        #     return {"error": error}
+        return decode(access_token, PUBLIC_KEY, algorithms=ALGORITHM)
 
     @staticmethod
     def find_by_username(username):

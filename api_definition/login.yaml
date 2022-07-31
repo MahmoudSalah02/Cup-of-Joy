@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/accessToken'
+                $ref: '#/components/responses/registrationSuccessful'
 components:
   requestBodies:
     credentials:
@@ -72,13 +72,19 @@ components:
                 description: Email of the employee
               username:
                 type: string
-                description: Username of ths user
+                description: Username of ths employee
               password:
                 type: string
-                description: Password of the user
+                description: Password of the employee
+              role:
+                type: string
+                description: Role of the employee
             required:
+              - name
+              - contact_number
               - username
               - password
+              - role
   responses:
     accessToken:
       description: JSON object containing the access token
@@ -90,10 +96,35 @@ components:
               access_token:
                 type: string
                 description: Access token of the user
-              message:
-                type: string
-                description: Message returned
             required:
               - access_token
-
-
+    registrationSuccessful:
+      description: JSON object containing the newly created employee
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              Id:
+                type: integer
+                description: Id of the newly created employee
+              name:
+                type: string
+                description: Name of the employee
+              contact_number:
+                type: integer
+                description: Contact number of the employee
+              email:
+                type: string
+                description: Email of the employee
+              username:
+                type: string
+                description: Username of ths employee
+              role:
+                type: string
+                description: Role of the employee
+            required:
+              - name
+              - contact_number
+              - username
+              - role
