@@ -1,5 +1,5 @@
 from flask import request
-from models.models import Employee
+from auth.tokens_util import decode_access_token
 from config.config import ROLE_MAPPING
 
 
@@ -13,10 +13,12 @@ def validate_token():
     if is_login_endpoint(request.url):
         return None
 
+    # TODO: add a method to check if the API endpoint is found
+
     # get, parse, and decode the authorization header
     authorization_header = request.headers.get("Authorization", None)
     access_token = parse_token(authorization_header)
-    access_token_decoded = Employee.decode_access_token(access_token)
+    access_token_decoded = decode_access_token(access_token)
 
     if not access_token_decoded:
         return {"error": "token can't be parsed"}

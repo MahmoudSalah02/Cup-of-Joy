@@ -1,36 +1,22 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from pathlib import Path
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+DEBUG = True
+TESTING = False
+PRIVATE_KEY_PATH = "data/jwt-key"
+PUBLIC_KEY_PATH = "data/jwt-key.pub"
+ALGORITHM = "RS256"
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+DB_PORT = os.getenv('DB_PORT')
+DATABASE_URI = f"postgresql+psycopg2://postgres:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 ROLE_MAPPING = {
     "/shop": ["cashier", "manager"],
     "/operation": ["manager"],
 }
+TOKEN_EXPIRE_HOURS = os.getenv("TOKEN_EXPIRE_HOURS", 1)
 
-# ROOT_PATH = Path(__file__).parent.parent
-# sql_url = "sqlite:///" + str(ROOT_PATH).replace("src", "").replace("\\", "\\\\") + "\\\\cafe.db"
-# engine = create_engine(sql_url)
-#
-# # the scoped_session() function is provided which produces a thread-managed registry of Session objects
-# session = scoped_session(sessionmaker(bind=engine))
 
-# TODO: write config in this format
-# import os
-#
-# from dotenv import load_dotenv, find_dotenv
-#
-# load_dotenv(find_dotenv())
-#
-# class Development(object):
-#     """
-#     Development environment configuration
-#     """
-#     DEBUG = True
-#     TESTING = False
-#     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-#     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-#
-# app_config = {
-#     'development': Development,
-#     'production': Production,
-# }

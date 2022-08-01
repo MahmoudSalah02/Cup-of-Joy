@@ -1,16 +1,9 @@
 from datetime import datetime
-from datetime import timedelta
-
 from bcrypt import hashpw, checkpw, gensalt
-from jwt import encode, decode
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-# TODO: error when you this file is imported from inside /seeds/
-PRIVATE_KEY = open('jwt-key').read()
-PUBLIC_KEY = open('jwt-key.pub').read()
-ALGORITHM = "RS256"
 
 Base = declarative_base()
 
@@ -101,29 +94,6 @@ class Employee(Base):
         """
         unchecked_password_as_bytes = str.encode(unchecked_password)
         return checkpw(unchecked_password_as_bytes, self.password)
-
-    def encode_access_token(self):
-        """
-        This function creates and returns an encoded access token
-        :return: string representing an encoded access token
-        """
-        payload = {
-            'exp': datetime.utcnow() + timedelta(days=1),
-            "iat": datetime.utcnow(),
-            "sub": self.id,
-            "username": self.username,
-            "role": self.role,
-        }
-        return encode(payload, PRIVATE_KEY, algorithm=ALGORITHM)
-
-    @staticmethod
-    def decode_access_token(access_token):
-        """
-
-        :param access_token:
-        :return:
-        """
-        return decode(access_token, PUBLIC_KEY, algorithms=ALGORITHM)
 
 
 class Item(Base):
