@@ -1,6 +1,6 @@
 from flask import request
 from auth.tokens_util import decode_access_token
-from config.config import ROLE_MAPPING
+from config import config
 
 
 def validate_token():
@@ -9,66 +9,40 @@ def validate_token():
     roles and permissions accordingly
     :return:
     """
-    # Authorization header is not required for login and registration
-    if is_login_endpoint(request.url):
+
+    # check if the API endpoint exists
+    path_rule = getattr(request.url_rule or {}, "rule", None)
+    if path_rule not in config.ROLE_MAPPING.keys():
+        raise Exception("API endpoint not found")
+
+    # user does not need a token to register or login
+    # coding wise, check if api endpoint roles are None
+    if not config.ROLE_MAPPING.get(path_rule):
         return None
 
-    # TODO: add a method to check if the API endpoint is found
-
-    # get, parse, and decode the authorization header
+    # At this point, the user must have access token
     authorization_header = request.headers.get("Authorization", None)
-    access_token = parse_token(authorization_header)
-    access_token_decoded = decode_access_token(access_token)
-
-    if not access_token_decoded:
-        return {"error": "token can't be parsed"}
-    else:
-        is_allowed = check_roles(request.url, access_token_decoded.get("role"))
-        if is_allowed:
-            return None
-        else:
-            return {"error": "employee not authorized"}
-
-
-def check_roles(request_url, role):
-    """
-    This function checks the role of an employee to see if the employee can access a particular resource
-    :param request_url: string representing the URL the employee tried to access
-    :param role: string representing the role of the employee, example: admin, cashier
-    :return: boolean value of whether the employee is allowed to access a particular resource
-    """
-    if "/shop" in request_url:
-        return role in ROLE_MAPPING.get("/shop")
-
-    elif "/operation" in request_url:
-        return role in ROLE_MAPPING.get("/operation")
-
-    return False
-
-
-def is_login_endpoint(url):
-    """
-    This function checks if a URL belongs to a login URL (/login, /register)
-    :param url: string representing the URL
-    :return: true of the URL is a (/login, /register), false otherwise
-    """
-    return "/login" in url or "/register" in url
-
-
-def parse_token(authorization_header):
-    """
-    This function takes the authorization header, parses it, and
-    returns the access token
-    :param authorization_header:
-    :return: string representing the access token
-    """
     if not authorization_header:
-        return {
-            "error": "Authorization header missing",
-            "status code": 401,
-        }
+        raise Exception("Access Token not found")
 
-    if str(authorization_header).startswith("Bearer "):
-        split = authorization_header.split("Bearer")
-        access_token = split[1].strip()
-        return access_token
+    # note that if access token is empty, the word Bearer will not be passed to headers
+    # at this point, the authorization_header looks something like: "Bearer ___access_token____"
+    # thus we will parse and return "___access_token____"
+    access_token_parsed = authorization_header.split("Bearer")[1].strip()
+    access_token_decoded = decode_access_token(access_token_parsed)
+
+    is_allowed = check_permission(path_rule, access_token_decoded)
+    if not is_allowed:
+        raise Exception("Employee not Authorized")
+
+
+def check_permission(path, token):
+    """
+    This method checks if an employee with access token is allowed
+    to access a particular resource
+    :param path: API endpoint the employee is trying to access
+    :param token: Decoded access token of the employee
+    :return: Boolean value of whether the employee is allowed access to the resource
+    """
+    role = token.get("role")
+    return role in config.ROLE_MAPPING.get(path)
