@@ -3,7 +3,8 @@ This is the orders module and supports all the REST actions for the
 Payments table
 """
 
-from models.models import Payment, session
+from models.models import Payment
+from init_db import session
 from models.schemas import PaymentSchema
 
 

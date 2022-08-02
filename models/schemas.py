@@ -55,6 +55,7 @@ class EmployeeSchema(SQLAlchemySchema):
     name = auto_field()
     contact_number = auto_field()
     email = auto_field()
+    role = auto_field()
 
 
 class ItemSchema(SQLAlchemySchema):

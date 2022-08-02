@@ -3,7 +3,8 @@ This is the customers module and supports all the REST actions for the
 Customer table
 """
 
-from models.models import Customer, session
+from models.models import Customer
+from init_db import session
 from models.schemas import CustomerSchema, OrderSchema
 
 

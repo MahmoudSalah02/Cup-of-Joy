@@ -1,10 +1,38 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from pathlib import Path
+import os
+from dotenv import load_dotenv
 
-ROOT_PATH = Path(__file__).parent.parent
-sql_url = "sqlite:///" + str(ROOT_PATH).replace("src", "").replace("\\", "\\\\") + "\\\\cafe.db"
-engine = create_engine(sql_url)
+load_dotenv()
 
-# the scoped_session() function is provided which produces a thread-managed registry of Session objects
-session = scoped_session(sessionmaker(bind=engine))
+DEBUG = True
+TESTING = False
+
+PRIVATE_KEY_PATH = "data/jwt-key"
+PUBLIC_KEY_PATH = "data/jwt-key.pub"
+ALGORITHM = "RS256"
+TOKEN_EXPIRE_HOURS = os.getenv("TOKEN_EXPIRE_HOURS", 1)
+
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_NAME = os.getenv('DB_NAME')
+DB_PORT = os.getenv('DB_PORT')
+DATABASE_URI = f"postgresql+psycopg2://postgres:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+ROLE_MAPPING = {
+    "/shop/orders": ["cashier", "manager"],
+    "/shop/orders/<int:order_id>": ["cashier", "manager"],
+
+    "/shop/customers": ["cashier", "manager"],
+    "/shop/customers/<int:customer_id>": ["cashier", "manager"],
+
+    "/operation/payments": ["manager"],
+    "/operation/payments/<int:order_id>": ["manager"],
+
+    "/operation/items": ["manager"],
+    "/operation/items/<int:item_id>": ["manager"],
+
+    "/operation/employees": ["manager"],
+    "/operation/employees/<int:employee_id>": ["manager"],
+
+    "/login": None,
+    "/register": None,
+}

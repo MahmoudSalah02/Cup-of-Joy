@@ -5,7 +5,8 @@ Order table
 
 from decimal import Decimal
 from controllers import customers, employees
-from models.models import Order, session
+from models.models import Order
+from init_db import session
 from models.schemas import OrderSchema, PaymentSchema
 
 

@@ -1,10 +1,9 @@
 from datetime import datetime
-
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from bcrypt import hashpw, checkpw, gensalt
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, LargeBinary
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from config.config import *
 
 Base = declarative_base()
 
@@ -56,10 +55,45 @@ class Employee(Base):
     email = Column(String(64), nullable=True, unique=True)
     orders_served = relationship('Order',
                                  back_populates="employee")
+    username = Column(String(64), unique=True)
+    role = Column(String(64))
+    password = Column(LargeBinary)
 
     def __repr__(self):
+        """
+
+        :return:
+        """
         return "<Order(name='%s', contact_number='%s', email='%s')>" % (
             self.name, self.contact_number, self.email)
+
+    def set_username(self, username):
+        """
+        This function sets the username of an employee
+        :return:
+        """
+        self.username = username
+
+    def set_hash_password(self, new_password):
+        """
+        This function takes a string representing the new password and
+        stores it in the db hashed
+        :param new_password: string representing the new password
+        :return: true if the operation is successful
+        """
+        new_password_as_bytes = str.encode(new_password)
+        hashed_password = hashpw(new_password_as_bytes, gensalt())
+        self.password = hashed_password
+
+    def check_password(self, unchecked_password):
+        """
+        This function returns true if the input password is equal to the password
+        stores in the db, false otherwise
+        :param unchecked_password: string representing the password to be checked
+        :return: True if the unchecked password matches the password in the db, False otherwise
+        """
+        unchecked_password_as_bytes = str.encode(unchecked_password)
+        return checkpw(unchecked_password_as_bytes, self.password)
 
 
 class Item(Base):
@@ -103,6 +137,3 @@ class OrderItem(Base):
     def __repr__(self):
         return "<Order(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
             self.order_id, self.item_id, self.quantity, self.customer_notes)
-
-
-Base.metadata.create_all(engine)
