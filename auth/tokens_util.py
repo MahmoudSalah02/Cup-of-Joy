@@ -7,7 +7,7 @@ PRIVATE_KEY = open(config.PRIVATE_KEY_PATH).read()
 PUBLIC_KEY = open(config.PUBLIC_KEY_PATH).read()
 
 
-def encode_access_token(employee):
+def create_access_token(employee):
     """
     This function creates and returns an encoded access token
     :return: string representing an encoded access token

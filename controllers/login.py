@@ -1,7 +1,7 @@
 from models.models import Employee
 from init_db import session
 from models.schemas import EmployeeSchema
-from auth.tokens_util import encode_access_token
+from auth.tokens_util import create_access_token
 
 
 def process_registration_request(body):
@@ -51,7 +51,7 @@ def process_login_request(body):
         return {"error": "password or username incorrect"}
 
     # generate new access token
-    return {"access_token": encode_access_token(existing_employee)}
+    return {"access_token": create_access_token(existing_employee)}
 
 
 def find_by_username(username):
