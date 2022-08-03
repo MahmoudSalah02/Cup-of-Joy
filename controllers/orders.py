@@ -6,7 +6,7 @@ Order table
 from decimal import Decimal
 from controllers import customers, employees
 from models.models import Order
-from init_db import session
+import init_db
 from models.schemas import OrderSchema, PaymentSchema
 
 
@@ -16,6 +16,7 @@ def read_all():
     with the complete lists of orders
     :return:        json string of list of orders
     """
+    session = init_db.get_session()
     # Create the list of orders from our data
     orders = session.query(Order).order_by(Order.order_time).all()
 
@@ -32,6 +33,7 @@ def create(body):
     :param body:  order to create
     :return:       201 on success, 406 on person exists
     """
+    session = init_db.get_session()
     if customers.read_one(body.get("customer_id")) is None:
         return {"error": f"Order not found for Id: {body.get('customer_id')}"}, 404
 
@@ -71,6 +73,7 @@ def read_one(order_id):
     :param order_id: id of order to find
     :return: JSON object of the order matching the id
     """
+    session = init_db.get_session()
     existing_order = (
         session.query(Order).filter(Order.id == order_id)
         .one_or_none()
@@ -91,7 +94,7 @@ def update(order_id, body):
     :param body: JSON object containing new changes to the order
     :return: JSON object of the updated order
     """
-
+    session = init_db.get_session()
     if read_one(order_id) is None:
         return {"error": f"Order not found for Id: {order_id}"}, 404
 
@@ -118,6 +121,7 @@ def delete(order_id):
     :param order_id: ID of the order to delete
     :return: JSON object of the deleted order
     """
+    session = init_db.get_session()
     existing_order = read_one(order_id)
 
     # deserialize order to a database object

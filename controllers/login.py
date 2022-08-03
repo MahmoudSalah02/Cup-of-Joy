@@ -1,7 +1,7 @@
 from models.models import Employee
-from init_db import session
 from models.schemas import EmployeeSchema
 from auth.tokens_util import create_access_token
+import init_db
 
 
 def process_registration_request(body):
@@ -10,6 +10,7 @@ def process_registration_request(body):
     :param body:
     :return:
     """
+    session = init_db.get_session()
     # check if username exists in employee table
     if find_by_username(body.get("username")):
         return {"error": f"{body.get('username')} already exists"}
@@ -60,4 +61,5 @@ def find_by_username(username):
     :param username: username of the user to find
     :return: user with matching username
     """
+    session = init_db.get_session()
     return session.query(Employee).filter(Employee.username == username).one_or_none()

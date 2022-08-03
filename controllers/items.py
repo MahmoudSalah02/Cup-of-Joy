@@ -4,7 +4,7 @@ Item table
 """
 
 from models.models import Item
-from init_db import session
+import init_db
 from models.schemas import ItemSchema
 
 
@@ -15,6 +15,7 @@ def read_all():
     :return:        json string of list of items
     """
     # Create the list of items from our data
+    session = init_db.get_session()
     items = session.query(Item).order_by(Item.name).all()
 
     # Serialize the data for the response
@@ -30,6 +31,7 @@ def create(body):
     :param body: JSON object of the item to be created
     :return: item created if request successful, error 409 otherwise
     """
+    session = init_db.get_session()
     existing_item = (
         session.query(Item).filter(Item.name == body.get("name"))
         .one_or_none()
@@ -61,6 +63,7 @@ def read_one(item_id):
     :param item_id: id of item to find
     :return: JSON object of the item matching the id
     """
+    session = init_db.get_session()
     existing_item = (
         session.query(Item).filter(Item.id == item_id)
         .one_or_none()
@@ -82,7 +85,7 @@ def update(item_id, body):
     :param body: JSON object containing new changes to the specific item
     :return: JSON object containing information about the item updated
     """
-
+    session = init_db.get_session()
     read_one(item_id)
 
     # deserialize data into a database object
@@ -102,6 +105,7 @@ def delete(item_id):
     :param item_id: id of the item to be deleted
     :return: JSON object containing information about the item deleted
     """
+    session = init_db.get_session()
     existing_item = read_one(item_id)
 
     # deserialize item to a database object

@@ -33,6 +33,6 @@ ROLE_MAPPING = {
     "/operation/employees": ["manager"],
     "/operation/employees/<int:employee_id>": ["manager"],
 
-    "/login": None,
-    "/register": None,
+    "auth/login": None,
+    "auth/register": None,
 }

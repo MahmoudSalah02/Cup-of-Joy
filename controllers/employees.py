@@ -4,7 +4,7 @@ Employee table
 """
 
 from models.models import Employee
-from init_db import session
+import init_db
 from models.schemas import EmployeeSchema
 
 
@@ -15,11 +15,13 @@ def read_all():
     :return:        json string of list of employees
     """
     # Create the list of employees from our data
+    session = init_db.get_session()
     employees = session.query(Employee).order_by(Employee.name).all()
 
     # Serialize the data for the response
-    employee_schema = EmployeeSchema(many=True)
+    employee_schema = EmployeeSchema(many=True, session=session)
     employee_data = employee_schema.dump(employees)
+
     return employee_data
 
 
@@ -30,6 +32,7 @@ def create(body):
     :param body: employee to be created
     :return: employee created if request successful, error 409 otherwise
     """
+    session = init_db.get_session()
     existing_employee = (
         session.query(Employee).filter(Employee.contact_number == body.get("contact_number"))
         .one_or_none()
@@ -61,6 +64,7 @@ def read_one(employee_id):
     :param employee_id: id of employee to find
     :return: JSON object of the employee matching the id
     """
+    session = init_db.get_session()
     existing_employee = (
         session.query(Employee).filter(Employee.id == employee_id)
         .one_or_none()
@@ -82,6 +86,7 @@ def update(employee_id, body):
     :param body: JSON object containing new changes to the employee
     :return: JSON object of the employee updated
     """
+    session = init_db.get_session()
     read_one(employee_id)
 
     # deserialize data into a database object
@@ -101,6 +106,7 @@ def delete(employee_id):
     :param employee_id: id of the employee to be deleted
     :return: JSON object of the employee deleted
     """
+    session = init_db.get_session()
     existing_employee = read_one(employee_id)
 
     # deserialize employee to a database object

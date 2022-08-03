@@ -4,7 +4,7 @@ Customer table
 """
 
 from models.models import Customer
-from init_db import session
+import init_db
 from models.schemas import CustomerSchema, OrderSchema
 
 
@@ -14,6 +14,7 @@ def read_all():
     with the complete lists of customers
     :return: array of JSON objects of all customers
     """
+    session = init_db.get_session()
     # Create the list of customers from our data
     customers = session.query(Customer).order_by(Customer.name).all()
 
@@ -30,6 +31,7 @@ def create(body):
     :param body: JSON object containing new changes to customer
     :return: JSON object of the new customer
     """
+    session = init_db.get_session()
     existing_customer = (
         session.query(Customer).filter(Customer.contact_number == body.get("contact_number"))
         .one_or_none()
@@ -61,6 +63,7 @@ def read_one(customer_id):
     :param customer_id: id of customer to find
     :return: JSON object of the customer matching the id
     """
+    session = init_db.get_session()
     existing_customer = (
         session.query(Customer).filter(Customer.id == customer_id)
         .one_or_none()
@@ -81,6 +84,7 @@ def read_orders(customer_id):
     :param customer_id: id of the customer who placed orders
     :return: orders of the customer with the specified id
     """
+    session = init_db.get_session()
     existing_customer = read_one(customer_id)
     customer_schema = CustomerSchema()
     existing_customer_deserialized = customer_schema.load(existing_customer, session=session)
@@ -97,7 +101,7 @@ def update(customer_id, body):
     :param body: JSON object containing new changes to customer
     :return:
     """
-
+    session = init_db.get_session()
     read_one(customer_id)
 
     # deserialize data into a database object
@@ -117,6 +121,7 @@ def delete(customer_id):
     :param customer_id: id of the customer to be deleted
     :return: JSON object containing information about the customer deleted
     """
+    session = init_db.get_session()
     existing_customer = read_one(customer_id)
 
     # deserialize customer to a database object

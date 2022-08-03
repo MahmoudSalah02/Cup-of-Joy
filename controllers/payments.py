@@ -4,7 +4,7 @@ Payments table
 """
 
 from models.models import Payment
-from init_db import session
+import init_db
 from models.schemas import PaymentSchema
 
 
@@ -14,6 +14,7 @@ def read_all():
     with the complete lists of payments (or receipts)
     :return:        json string of list of payments
     """
+    session = init_db.get_session()
     # Create the list of orders from our data
     payments = session.query(Payment).all()
 
@@ -30,6 +31,7 @@ def read_one(order_id):
     :param order_id: id of order to find
     :return: JSON object of the order matching the id
     """
+    session = init_db.get_session()
     existing_payment = (
         session.query(Payment).filter(Payment.order_id == order_id)
         .one_or_none()
