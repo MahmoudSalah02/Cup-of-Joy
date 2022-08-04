@@ -86,7 +86,9 @@ def update(item_id, body):
     :return: JSON object containing information about the item updated
     """
     session = init_db.get_session()
-    read_one(item_id)
+    read_one_response = read_one(item_id)
+    if read_one_response[1] == 404:
+        return read_one_response
 
     # deserialize data into a database object
     item_schema = ItemSchema()

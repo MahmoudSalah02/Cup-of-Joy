@@ -72,7 +72,7 @@ def read_one(customer_id):
     if existing_customer is not None:
         customer_schema = CustomerSchema()
         customer_data_serialized = customer_schema.dump(existing_customer)
-        return customer_data_serialized
+        return customer_data_serialized, 200
 
     else:
         return {"error": f"Customer not found for Id: {customer_id}"}, 404
@@ -102,7 +102,9 @@ def update(customer_id, body):
     :return:
     """
     session = init_db.get_session()
-    read_one(customer_id)
+    read_one_response = read_one(customer_id)
+    if read_one_response[1] == 404:
+        return read_one_response
 
     # deserialize data into a database object
     customer_schema = CustomerSchema()

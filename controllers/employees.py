@@ -22,7 +22,7 @@ def read_all():
     employee_schema = EmployeeSchema(many=True, session=session)
     employee_data = employee_schema.dump(employees)
 
-    return employee_data
+    return employee_data, 200
 
 
 def create(body):
@@ -50,7 +50,7 @@ def create(body):
         session.commit()
 
         employee_data = employee_schema.dump(new_employee_deserialized)
-        return employee_data, 201
+        return employee_data, 200
 
     # otherwise, person exists already
     else:
@@ -73,7 +73,7 @@ def read_one(employee_id):
     if existing_employee is not None:
         employee_schema = EmployeeSchema()
         employee_data_serialized = employee_schema.dump(existing_employee)
-        return employee_data_serialized
+        return employee_data_serialized, 200
 
     else:
         return {"error": f"Employee not found for id: {employee_id}"}, 404
@@ -87,7 +87,9 @@ def update(employee_id, body):
     :return: JSON object of the employee updated
     """
     session = init_db.get_session()
-    read_one(employee_id)
+    read_one_response = read_one(employee_id)
+    if read_one_response[1] == 404:
+        return read_one_response
 
     # deserialize data into a database object
     employee_schema = EmployeeSchema()
@@ -108,12 +110,14 @@ def delete(employee_id):
     """
     session = init_db.get_session()
     existing_employee = read_one(employee_id)
+    if existing_employee[1] == 404:
+        return existing_employee
 
     # deserialize employee to a database object
     employee_schema = EmployeeSchema()
-    employee_schema_deserialized = employee_schema.load(existing_employee, session=session)
+    employee_schema_deserialized = employee_schema.load(existing_employee[0], session=session)
 
     # if the execution reaches this line, then existing employee is not None
     session.delete(employee_schema_deserialized)
     session.commit()
-    return existing_employee
+    return existing_employee[0], 200
