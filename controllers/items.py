@@ -21,7 +21,7 @@ def read_all():
     # Serialize the data for the response
     item_schema = ItemSchema(many=True)
     item_data = item_schema.dump(items)
-    return item_data
+    return item_data, 200
 
 
 def create(body):
@@ -49,7 +49,7 @@ def create(body):
         session.commit()
 
         item_data = item_schema.dump(new_item_deserialized)
-        return item_data, 201
+        return item_data, 200
 
     # otherwise, person exists already
     else:
@@ -72,7 +72,7 @@ def read_one(item_id):
     if existing_item is not None:
         item_schema = ItemSchema()
         item_data_serialized = item_schema.dump(existing_item)
-        return item_data_serialized
+        return item_data_serialized, 200
 
     else:
         return {"error": f"Item not found for id: {item_id}"}, 404
@@ -109,12 +109,14 @@ def delete(item_id):
     """
     session = init_db.get_session()
     existing_item = read_one(item_id)
+    if existing_item[1] == 404:
+        return existing_item
 
     # deserialize item to a database object
     item_schema = ItemSchema()
-    item_schema_deserialized = item_schema.load(existing_item, session=session)
+    item_schema_deserialized = item_schema.load(existing_item[0], session=session)
 
     # if the execution reaches this line, then existing item is not None
     session.delete(item_schema_deserialized)
     session.commit()
-    return existing_item
+    return existing_item[0], 200
