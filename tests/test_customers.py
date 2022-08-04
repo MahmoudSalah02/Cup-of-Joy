@@ -1,83 +1,96 @@
 import unittest
-from controllers import employees
+from controllers import customers
 from unittest.mock import patch
 
 
-class TestEmployees(unittest.TestCase):
+class TestCustomers(unittest.TestCase):
 
     @patch("init_db.get_session")
     def test_read_all(self, mock_get_session):
-        mock_get_session.return_value = MockEmployee()
-        self.assertEqual(employees.read_all()[0], employee_data)
+        mock_get_session.return_value = MockCustomer()
+        self.assertEqual(customers.read_all()[0], customer_data)
 
     @patch("init_db.get_session")
     def test_create(self, mock_get_session):
-        new_employee = {
+        new_customer = {
             "name": "Mohammad",
             "contact_number": 1234,
-            "email": "mohammad@gmail.com"
         }
-        # Case 1: employee is found
-        mock_get_session.return_value = MockEmployee(employee=employee_data[0])
-        response = employees.create(new_employee)
-        self.assertEqual(response[0], {'error': 'Employee Mohammad already exists'})
+        # Case 1: Customer is found
+        mock_get_session.return_value = MockCustomer(customer=customer_data[0])
+        response = customers.create(new_customer)
+        self.assertEqual(response[0], {'error': 'Customer Mohammad exists already'})
 
-        # Case 2: employee not found
-        mock_get_session.return_value = MockEmployee()
-        response = employees.create(new_employee)
+        # Case 2: Customer not found
+        mock_get_session.return_value = MockCustomer()
+        response = customers.create(new_customer)
         self.assertEqual(response[0], {'id': None,
                                        'contact_number': 1234,
-                                       'email': 'mohammad@gmail.com',
-                                       'role': None,
                                        'name': 'Mohammad'})
 
     @patch("init_db.get_session")
     def test_read_one(self, mock_get_session):
-        existing_employee = employee_data[0]
+        existing_customer = customer_data[0]
 
-        # Case 1: employee is found
-        mock_get_session.return_value = MockEmployee(existing_employee)
-        response = employees.read_one(existing_employee.get("id"))
-        self.assertEqual(response[0], existing_employee)
+        # Case 1: Customer is found
+        mock_get_session.return_value = MockCustomer(existing_customer)
+        response = customers.read_one(existing_customer.get("id"))
+        self.assertEqual(response[0], existing_customer)
 
-        # Case 2: employee not found
-        mock_get_session.return_value = MockEmployee()
-        response = employees.read_one(existing_employee.get("id"))
-        self.assertEqual(response[0], {'error': 'Employee not found for id: 1'})
+        # Case 2: Customer not found
+        mock_get_session.return_value = MockCustomer()
+        response = customers.read_one(existing_customer.get("id"))
+        self.assertEqual(response[0], {'error': 'Customer not found for Id: 1'})
 
     @patch("init_db.get_session")
     def test_update(self, mock_get_session):
-        existing_employee_updated = employee_data[0]
-        existing_employee_updated["name"] = "John"
+        existing_customer_updated = customer_data[0]
+        existing_customer_updated["name"] = "John"
 
-        # Case 1: employee is found
-        mock_get_session.return_value = MockEmployee(existing_employee_updated)
-        response = employees.update(1, existing_employee_updated)
-        self.assertEqual(response[0], existing_employee_updated)
+        # Case 1: customer is found
+        mock_get_session.return_value = MockCustomer(existing_customer_updated)
+        response = customers.update(1, existing_customer_updated)
+        self.assertEqual(response[0], existing_customer_updated)
 
-        # Case 2: employee not found
-        mock_get_session.return_value = MockEmployee()
-        response = employees.update(1, existing_employee_updated)
-        self.assertEqual(response[0], {'error': 'Employee not found for id: 1'})
+        # Case 2: customer not found
+        mock_get_session.return_value = MockCustomer()
+        response = customers.update(1, existing_customer_updated)
+        self.assertEqual(response[0], {'error': 'Customer not found for Id: 1'})
 
     @patch("init_db.get_session")
     def test_delete(self, mock_get_session):
-        employee_to_delete = employee_data[0]
+        customer_to_delete = customer_data[0]
 
-        # Case 1: employee is found
-        mock_get_session.return_value = MockEmployee(employee_to_delete)
-        response = employees.delete(1)
-        self.assertEqual(response[0], employee_to_delete)
+        # Case 1: customer is found
+        mock_get_session.return_value = MockCustomer(customer_to_delete)
+        response = customers.delete(1)
+        self.assertEqual(response[0], customer_to_delete)
 
-        # Case 2: employee not found
-        mock_get_session.return_value = MockEmployee()
-        response = employees.delete(1)
-        self.assertEqual(response[0], {'error': 'Employee not found for id: 1'})
+        # Case 2: customer not found
+        mock_get_session.return_value = MockCustomer()
+        response = customers.delete(1)
+        self.assertEqual(response[0], {'error': 'Customer not found for Id: 1'})
+
+    @patch("init_db.get_session")
+    def test_read_orders(self, mock_get_session):
+        customer_find_orders = customer_data[0]
+        customer_find_orders["orders_placed"]: []
+
+        # Case 1: customer is found
+        mock_get_session.return_value = MockCustomer(customer_find_orders)
+        response = customers.read_orders(1)
+        self.assertEqual(response[0], [])
+
+        # Case 2: customer not found
+        mock_get_session.return_value = MockCustomer()
+        response = customers.read_orders(1)
+        self.assertEqual(response[0], {'error': 'Customer not found for Id: 1'})
 
 
-class MockEmployee:
-    def __init__(self, employee=None):
-        self.employee = employee
+class MockCustomer:
+    def __init__(self, customer=None):
+        self.customer = customer
+        self.orders_placed = []
 
     def query(self, *args, **kwargs):
         return self
@@ -92,7 +105,7 @@ class MockEmployee:
         return self
 
     def all(self, *args, **kwargs):
-        return employee_data
+        return customer_data
 
     def commit(self, *args, **kwargs):
         return self
@@ -107,17 +120,16 @@ class MockEmployee:
         return self
 
     def one_or_none(self, *args, **kwargs):
-        return self.employee
+        return self.customer
 
     def delete(self, *args, **kwargs):
         return self
 
 
-employee_data = [
+customer_data = [
     {
         "id": 1,
         "name": "Nabil",
         "contact_number": 123,
-        "email": "mohammad@gmail.com"
     }
 ]

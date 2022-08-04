@@ -21,7 +21,7 @@ def read_all():
     # Serialize the data for the response
     customer_schema = CustomerSchema(many=True)
     customer_data = customer_schema.dump(customers)
-    return customer_data
+    return customer_data, 200
 
 
 def create(body):
@@ -86,12 +86,15 @@ def read_orders(customer_id):
     """
     session = init_db.get_session()
     existing_customer = read_one(customer_id)
+    if existing_customer[1] == 404:
+        return existing_customer
+
     customer_schema = CustomerSchema()
-    existing_customer_deserialized = customer_schema.load(existing_customer, session=session)
+    existing_customer_deserialized = customer_schema.load(existing_customer[0], session=session)
 
     order_schema = OrderSchema(many=True)
     orders_data = order_schema.dump(existing_customer_deserialized.orders_placed)
-    return orders_data
+    return orders_data, 200
 
 
 def update(customer_id, body):
@@ -125,12 +128,14 @@ def delete(customer_id):
     """
     session = init_db.get_session()
     existing_customer = read_one(customer_id)
+    if existing_customer[1] == 404:
+        return existing_customer
 
     # deserialize customer to a database object
     customer_schema = CustomerSchema()
-    customer_schema_deserialized = customer_schema.load(existing_customer, session=session)
+    customer_schema_deserialized = customer_schema.load(existing_customer[0], session=session)
 
     # if the execution reaches this line, then existing customer is not None
     session.delete(customer_schema_deserialized)
     session.commit()
-    return existing_customer
+    return existing_customer[0], 200
