@@ -6,6 +6,8 @@ Payments table
 from models.models import Payment
 import init_db
 from models.schemas import PaymentSchema
+from controllers import orders
+from decimal import Decimal
 
 
 def read_all():
@@ -43,3 +45,44 @@ def read_one(order_id):
         return payment_data_serialized
     else:
         return {"error": f"Payment not found for Id: {order_id}"}, 404
+
+
+def create(order_id):
+
+    existing_payment = read_one(order_id)
+    if existing_payment[1] == 404:
+        return existing_payment[0]
+
+    existing_order = orders.read_one(order_id)
+    if existing_order[1] == 404:
+        return {"error": f"Order with id {order_id} not found"}
+
+    session = init_db.get_session()
+    price = 0
+    for orderItem in existing_order[0].items_ordered:
+        item_details = orderItem.item_details
+        if str(item_details.price).startswith("$") and is_float(str(item_details.price)[1:]):
+            price += Decimal(item_details.price.strip('$')) * orderItem.quantity
+        else:
+            return {"error": "price should be in '$00.00' format"}
+
+    new_payment = {
+        "order_id": existing_order[0].get("id"),
+        "customer_id": existing_order[0].get("customer_id"),
+        "employee_id": existing_order[0].get("employee_id"),
+        "price": price
+    }
+
+    payment_schema = PaymentSchema()
+    payment_schema.load(new_payment, session=session)
+
+    session.commit()
+    return new_payment
+
+
+def is_float(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False

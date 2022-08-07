@@ -1,10 +1,11 @@
 from models.models import Customer, Order, OrderItem, Payment, Employee, Item
-from init_db import session
+import init_db
 from seeds.data import MENU, CUSTOMERS
 from datetime import datetime
 
 
 def populate():
+    session = init_db.get_session()
     try:
         items = []
         for item in MENU:

@@ -49,7 +49,7 @@ def create(body):
         session.commit()
 
         customer_data = customer_schema.dump(new_customer_deserialized)
-        return customer_data, 201
+        return customer_data, 200
 
     # otherwise, person exists already
     else:

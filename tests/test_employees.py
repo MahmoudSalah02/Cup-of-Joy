@@ -10,26 +10,6 @@ class TestEmployees(unittest.TestCase):
         mock_get_session.return_value = MockEmployee()
         self.assertEqual(employees.read_all()[0], employee_data)
 
-    @patch("init_db.get_session")
-    def test_create(self, mock_get_session):
-        new_employee = {
-            "name": "Mohammad",
-            "contact_number": 1234,
-            "email": "mohammad@gmail.com"
-        }
-        # Case 1: employee is found
-        mock_get_session.return_value = MockEmployee(employee=employee_data[0])
-        response = employees.create(new_employee)
-        self.assertEqual(response[0], {'error': 'Employee Mohammad already exists'})
-
-        # Case 2: employee not found
-        mock_get_session.return_value = MockEmployee()
-        response = employees.create(new_employee)
-        self.assertEqual(response[0], {'id': None,
-                                       'contact_number': 1234,
-                                       'email': 'mohammad@gmail.com',
-                                       'role': None,
-                                       'name': 'Mohammad'})
 
     @patch("init_db.get_session")
     def test_read_one(self, mock_get_session):

@@ -25,38 +25,6 @@ def read_all():
     return employee_data, 200
 
 
-def create(body):
-    """
-    This function creates a new employee based on the employee
-    data passed in
-    :param body: employee to be created
-    :return: employee created if request successful, error 409 otherwise
-    """
-    session = init_db.get_session()
-    existing_employee = (
-        session.query(Employee).filter(Employee.contact_number == body.get("contact_number"))
-        .one_or_none()
-    )
-
-    # if employee does not exist in the database
-    if existing_employee is None:
-
-        # deserialize employee to a database object
-        employee_schema = EmployeeSchema()
-        new_employee_deserialized = employee_schema.load(body, session=session)
-
-        # add the employee to the database
-        session.add(new_employee_deserialized)
-        session.commit()
-
-        employee_data = employee_schema.dump(new_employee_deserialized)
-        return employee_data, 200
-
-    # otherwise, person exists already
-    else:
-        return {"error": f"Employee {body.get('name')} already exists"}, 404
-
-
 def read_one(employee_id):
     """
     This function responds to a request for /api/employees/{employee_id}

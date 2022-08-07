@@ -1,6 +1,6 @@
 from models.models import Employee
 from models.schemas import EmployeeSchema
-from auth.tokens_util import create_access_token
+from auth import tokens_util
 import init_db
 
 
@@ -13,7 +13,7 @@ def process_registration_request(body):
     session = init_db.get_session()
     # check if username exists in employee table
     if find_by_username(body.get("username")):
-        return {"error": f"{body.get('username')} already exists"}
+        return {"error": f"{body.get('username')} already exists"}, 404
 
     # gather employee info in a dictionary
     employee_info = {
@@ -34,7 +34,7 @@ def process_registration_request(body):
 
     session.commit()
 
-    return employee_schema.dump(new_employee_deserialized)
+    return employee_schema.dump(new_employee_deserialized), 200
 
 
 def process_login_request(body):
@@ -49,10 +49,10 @@ def process_login_request(body):
 
     # return an error if username is not found or password is incorrect, otherwise, login
     if not existing_employee or not existing_employee.check_password(body.get("password")):
-        return {"error": "password or username incorrect"}
+        return {"error": "password or username incorrect"}, 404
 
     # generate new access token
-    return {"access_token": create_access_token(existing_employee)}
+    return {"access_token": tokens_util.create_access_token(existing_employee)}, 200
 
 
 def find_by_username(username):
