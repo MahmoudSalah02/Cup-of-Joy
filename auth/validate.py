@@ -9,7 +9,6 @@ def validate_token():
     roles and permissions accordingly
     :return:
     """
-
     # check if the API endpoint exists
     path_rule = getattr(request.url_rule or {}, "rule", None)
     if path_rule not in config.ROLE_MAPPING.keys():

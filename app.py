@@ -1,7 +1,7 @@
 import connexion
 
 from auth import validate
-
+import init_db
 
 def create_app():
     """
@@ -16,7 +16,9 @@ def create_app():
 
     connex_app.add_api("operation.yaml")
     connex_app.add_api("shop.yaml")
-    connex_app.add_api("login.yaml")
+    connex_app.add_api("auth.yaml")
+
+    init_db.init_db()
 
     @connex_app.route('/', methods=['GET'])
     def index():

@@ -25,7 +25,7 @@ ROLE_MAPPING = {
     "/shop/customers/<int:customer_id>": ["cashier", "manager"],
 
     "/operation/payments": ["manager"],
-    "/operation/payments/<int:order_id>": ["manager"],
+    "/operation/payments/<int:order_id>": ["manager", "cashier"],
 
     "/operation/items": ["manager"],
     "/operation/items/<int:item_id>": ["manager"],
@@ -33,6 +33,6 @@ ROLE_MAPPING = {
     "/operation/employees": ["manager"],
     "/operation/employees/<int:employee_id>": ["manager"],
 
-    "/login": None,
-    "/register": None,
+    "/auth/login": None,
+    "/auth/register": None,
 }

@@ -295,5 +295,5 @@ components:
                 type: integer
                 description: Id of the employee
               price:
-                type: number
+                type: string
                 description: Total price of the order

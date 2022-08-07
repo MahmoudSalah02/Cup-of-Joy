@@ -4,7 +4,7 @@ Customer table
 """
 
 from models.models import Customer
-from init_db import session
+import init_db
 from models.schemas import CustomerSchema, OrderSchema
 
 
@@ -14,13 +14,14 @@ def read_all():
     with the complete lists of customers
     :return: array of JSON objects of all customers
     """
+    session = init_db.get_session()
     # Create the list of customers from our data
     customers = session.query(Customer).order_by(Customer.name).all()
 
     # Serialize the data for the response
     customer_schema = CustomerSchema(many=True)
     customer_data = customer_schema.dump(customers)
-    return customer_data
+    return customer_data, 200
 
 
 def create(body):
@@ -30,6 +31,7 @@ def create(body):
     :param body: JSON object containing new changes to customer
     :return: JSON object of the new customer
     """
+    session = init_db.get_session()
     existing_customer = (
         session.query(Customer).filter(Customer.contact_number == body.get("contact_number"))
         .one_or_none()
@@ -47,7 +49,7 @@ def create(body):
         session.commit()
 
         customer_data = customer_schema.dump(new_customer_deserialized)
-        return customer_data, 201
+        return customer_data, 200
 
     # otherwise, person exists already
     else:
@@ -61,6 +63,7 @@ def read_one(customer_id):
     :param customer_id: id of customer to find
     :return: JSON object of the customer matching the id
     """
+    session = init_db.get_session()
     existing_customer = (
         session.query(Customer).filter(Customer.id == customer_id)
         .one_or_none()
@@ -69,7 +72,7 @@ def read_one(customer_id):
     if existing_customer is not None:
         customer_schema = CustomerSchema()
         customer_data_serialized = customer_schema.dump(existing_customer)
-        return customer_data_serialized
+        return customer_data_serialized, 200
 
     else:
         return {"error": f"Customer not found for Id: {customer_id}"}, 404
@@ -81,13 +84,17 @@ def read_orders(customer_id):
     :param customer_id: id of the customer who placed orders
     :return: orders of the customer with the specified id
     """
+    session = init_db.get_session()
     existing_customer = read_one(customer_id)
+    if existing_customer[1] == 404:
+        return existing_customer
+
     customer_schema = CustomerSchema()
-    existing_customer_deserialized = customer_schema.load(existing_customer, session=session)
+    existing_customer_deserialized = customer_schema.load(existing_customer[0], session=session)
 
     order_schema = OrderSchema(many=True)
     orders_data = order_schema.dump(existing_customer_deserialized.orders_placed)
-    return orders_data
+    return orders_data, 200
 
 
 def update(customer_id, body):
@@ -97,8 +104,10 @@ def update(customer_id, body):
     :param body: JSON object containing new changes to customer
     :return:
     """
-
-    read_one(customer_id)
+    session = init_db.get_session()
+    read_one_response = read_one(customer_id)
+    if read_one_response[1] == 404:
+        return read_one_response
 
     # deserialize data into a database object
     customer_schema = CustomerSchema()
@@ -117,13 +126,16 @@ def delete(customer_id):
     :param customer_id: id of the customer to be deleted
     :return: JSON object containing information about the customer deleted
     """
+    session = init_db.get_session()
     existing_customer = read_one(customer_id)
+    if existing_customer[1] == 404:
+        return existing_customer
 
     # deserialize customer to a database object
     customer_schema = CustomerSchema()
-    customer_schema_deserialized = customer_schema.load(existing_customer, session=session)
+    customer_schema_deserialized = customer_schema.load(existing_customer[0], session=session)
 
     # if the execution reaches this line, then existing customer is not None
     session.delete(customer_schema_deserialized)
     session.commit()
-    return existing_customer
+    return existing_customer[0], 200

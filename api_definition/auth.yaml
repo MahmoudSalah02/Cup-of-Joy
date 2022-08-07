@@ -4,7 +4,7 @@ info:
   description: API endpoints to login and register
   version: 1.0.0
 servers:
-  - url: '/'
+  - url: '/auth'
 paths:
   /login:
     post:

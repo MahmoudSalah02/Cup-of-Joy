@@ -64,7 +64,7 @@ class Employee(Base):
 
         :return:
         """
-        return "<Order(name='%s', contact_number='%s', email='%s')>" % (
+        return "<Employee(name='%s', contact_number='%s', email='%s')>" % (
             self.name, self.contact_number, self.email)
 
     def set_username(self, username):
@@ -106,7 +106,7 @@ class Item(Base):
                                 back_populates="item_details")
 
     def __repr__(self):
-        return "<Order(name='%s', price='%s', ingredients='%s')>" % (
+        return "<Item(name='%s', price='%s', ingredients='%s')>" % (
             self.name, self.price, self.ingredients)
 
 
@@ -115,10 +115,10 @@ class Payment(Base):
     order_id = Column(Integer, ForeignKey('order.id'), primary_key=True)
     customer_id = Column(Integer, ForeignKey('customer.id'))
     employee_id = Column(Integer, ForeignKey('employee.id'))
-    price = Column(Integer, nullable=False)
+    price = Column(String, nullable=False)
 
     def __repr__(self):
-        return "<Order(order_id='%s', price='%s')>" % (
+        return "<Payment(order_id='%s', price='%s')>" % (
             self.order_id, self.price)
 
 
@@ -135,5 +135,5 @@ class OrderItem(Base):
                                 back_populates="item_ordered")
 
     def __repr__(self):
-        return "<Order(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
+        return "<OrderItem(order_id='%s', item_id='%s', quantity='%s', customer_notes='%s')>" % (
             self.order_id, self.item_id, self.quantity, self.customer_notes)
