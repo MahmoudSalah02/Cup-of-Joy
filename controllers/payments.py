@@ -23,7 +23,7 @@ def read_all():
     # Serialize the data for the response
     payment_schema = PaymentSchema(many=True)
     payments_data = payment_schema.dump(payments)
-    return payments_data
+    return payments_data, 200
 
 
 def read_one(order_id):
@@ -42,7 +42,7 @@ def read_one(order_id):
     if existing_payment is not None:
         payment_schema = PaymentSchema()
         payment_data_serialized = payment_schema.dump(existing_payment)
-        return payment_data_serialized
+        return payment_data_serialized, 200
     else:
         return {"error": f"Payment not found for Id: {order_id}"}, 404
 
@@ -55,7 +55,7 @@ def create(order_id):
 
     existing_order = orders.read_one(order_id)
     if existing_order[1] == 404:
-        return {"error": f"Order with id {order_id} not found"}
+        return {"error": f"Order with id {order_id} not found"}, 404
 
     session = init_db.get_session()
     price = 0
@@ -77,7 +77,7 @@ def create(order_id):
     payment_schema.load(new_payment, session=session)
 
     session.commit()
-    return new_payment
+    return new_payment, 200
 
 
 def is_float(num):

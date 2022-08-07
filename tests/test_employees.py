@@ -10,7 +10,6 @@ class TestEmployees(unittest.TestCase):
         mock_get_session.return_value = MockEmployee()
         self.assertEqual(employees.read_all()[0], employee_data)
 
-
     @patch("init_db.get_session")
     def test_read_one(self, mock_get_session):
         existing_employee = employee_data[0]

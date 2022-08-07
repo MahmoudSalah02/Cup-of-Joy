@@ -80,6 +80,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/Order'
+  /payment/order_id:
+    post:
+      tags:
+        - orders
+      summary: Generate a receipt
+      operationId: controllers.payments.create
+      parameters:
+        - $ref: '#/components/parameters/orderId'
+      responses:
+        200:
+          description: Successfully generated a receipt
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/responses/Payment'
+
   /customers:
     get:
       tags:
@@ -300,3 +316,22 @@ components:
               - id
               - name
               - contact_number
+    Payment:
+      description: JSON object containing information about a payment
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              order_id:
+                type: integer
+                description: Id of the order
+              customer_id:
+                type: integer
+                description: Id of the customer who ordered
+              employee_id:
+                type: integer
+                description: Id of the employee who served the order
+              price:
+                type: number
+                description: Total price of the order

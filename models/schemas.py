@@ -77,3 +77,8 @@ class PaymentSchema(SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
         include_relationships = True
+
+    order_id = auto_field()
+    employee_id = auto_field()
+    customer_id = auto_field()
+    price = auto_field()

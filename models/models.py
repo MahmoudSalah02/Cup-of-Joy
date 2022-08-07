@@ -115,7 +115,7 @@ class Payment(Base):
     order_id = Column(Integer, ForeignKey('order.id'), primary_key=True)
     customer_id = Column(Integer, ForeignKey('customer.id'))
     employee_id = Column(Integer, ForeignKey('employee.id'))
-    price = Column(Integer, nullable=False)
+    price = Column(String, nullable=False)
 
     def __repr__(self):
         return "<Payment(order_id='%s', price='%s')>" % (
