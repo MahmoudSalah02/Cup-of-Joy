@@ -3,9 +3,8 @@ This is the items module and supports all the REST actions for the
 Item table
 """
 
-from services.backend.models.models import Item
-from services.backend import init_db
-from services.backend.models.schemas import ItemSchema
+from models import schemas, models
+import init_db
 
 
 def read_all():
@@ -16,10 +15,10 @@ def read_all():
     """
     # Create the list of items from our data
     session = init_db.get_session()
-    items = session.query(Item).order_by(Item.name).all()
+    items = session.query(models.Item).order_by(models.Item.name).all()
 
     # Serialize the data for the response
-    item_schema = ItemSchema(many=True)
+    item_schema = schemas.ItemSchema(many=True)
     item_data = item_schema.dump(items)
     return item_data, 200
 
@@ -33,7 +32,7 @@ def create(body):
     """
     session = init_db.get_session()
     existing_item = (
-        session.query(Item).filter(Item.name == body.get("name"))
+        session.query(models.Item).filter(models.Item.name == body.get("name"))
         .one_or_none()
     )
 
@@ -41,7 +40,7 @@ def create(body):
     if existing_item is None:
 
         # deserialize item to a database object
-        item_schema = ItemSchema()
+        item_schema = schemas.ItemSchema()
         new_item_deserialized = item_schema.load(body, session=session)
 
         # add the item to the database
@@ -65,12 +64,12 @@ def read_one(item_id):
     """
     session = init_db.get_session()
     existing_item = (
-        session.query(Item).filter(Item.id == item_id)
+        session.query(models.Item).filter(models.Item.id == item_id)
         .one_or_none()
     )
 
     if existing_item is not None:
-        item_schema = ItemSchema()
+        item_schema = schemas.ItemSchema()
         item_data_serialized = item_schema.dump(existing_item)
         return item_data_serialized, 200
 
@@ -91,7 +90,7 @@ def update(item_id, body):
         return read_one_response
 
     # deserialize data into a database object
-    item_schema = ItemSchema()
+    item_schema = schemas.ItemSchema()
     existing_item_deserialized = item_schema.load(body, session=session)
 
     session.merge(existing_item_deserialized)
@@ -113,7 +112,7 @@ def delete(item_id):
         return existing_item
 
     # deserialize item to a database object
-    item_schema = ItemSchema()
+    item_schema = schemas.ItemSchema()
     item_schema_deserialized = item_schema.load(existing_item[0], session=session)
 
     # if the execution reaches this line, then existing item is not None

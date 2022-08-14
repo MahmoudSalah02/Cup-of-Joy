@@ -3,10 +3,9 @@ This is the orders module and supports all the REST actions for the
 Payments table
 """
 
-from services.backend.models.models import Payment
-from services.backend import init_db
-from services.backend.models.schemas import PaymentSchema
-from services.backend.controllers import orders
+from models import models, schemas
+import init_db
+from controllers import orders
 from decimal import Decimal
 
 
@@ -18,10 +17,10 @@ def read_all():
     """
     session = init_db.get_session()
     # Create the list of orders from our data
-    payments = session.query(Payment).all()
+    payments = session.query(models.Payment).all()
 
     # Serialize the data for the response
-    payment_schema = PaymentSchema(many=True)
+    payment_schema = schemas.PaymentSchema(many=True)
     payments_data = payment_schema.dump(payments)
     return payments_data, 200
 
@@ -35,12 +34,12 @@ def read_one(order_id):
     """
     session = init_db.get_session()
     existing_payment = (
-        session.query(Payment).filter(Payment.order_id == order_id)
+        session.query(models.Payment).filter(models.Payment.order_id == order_id)
         .one_or_none()
     )
 
     if existing_payment is not None:
-        payment_schema = PaymentSchema()
+        payment_schema = schemas.PaymentSchema()
         payment_data_serialized = payment_schema.dump(existing_payment)
         return payment_data_serialized, 200
     else:
@@ -73,7 +72,7 @@ def create(order_id):
         "price": price
     }
 
-    payment_schema = PaymentSchema()
+    payment_schema = schemas.PaymentSchema()
     payment_schema.load(new_payment, session=session)
 
     session.commit()

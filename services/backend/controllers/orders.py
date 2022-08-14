@@ -4,10 +4,9 @@ Order table
 """
 
 from sqlalchemy.exc import IntegrityError
-from services.backend import init_db
-from services.backend.controllers import customers, employees
-from services.backend.models.models import Order
-from services.backend.models.schemas import OrderSchema
+import init_db
+from controllers import customers, employees
+from models import models, schemas
 
 
 def read_all():
@@ -18,10 +17,10 @@ def read_all():
     """
     session = init_db.get_session()
     # Create the list of orders from our data
-    orders = session.query(Order).order_by(Order.order_time).all()
+    orders = session.query(models.Order).order_by(models.Order.order_time).all()
 
     # Serialize the data for the response
-    order_schema = OrderSchema(many=True)
+    order_schema = schemas.OrderSchema(many=True)
     orders_data = order_schema.dump(orders)
     return orders_data, 200
 
@@ -40,7 +39,7 @@ def create(body):
     if employees.read_one(body.get("employee_id"))[1] == 404:
         return {"error": f"Employee with Id {body.get('employee_id')} not found"}, 404
 
-    order_schema = OrderSchema()
+    order_schema = schemas.OrderSchema()
     new_order_deserialized = order_schema.load(body, session=session)
 
     try:
@@ -63,12 +62,12 @@ def read_one(order_id):
     """
     session = init_db.get_session()
     existing_order = (
-        session.query(Order).filter(Order.id == order_id)
+        session.query(models.Order).filter(models.Order.id == order_id)
         .one_or_none()
     )
 
     if existing_order is not None:
-        order_schema = OrderSchema()
+        order_schema = schemas.OrderSchema()
         order_data_serialized = order_schema.dump(existing_order)
         return order_data_serialized, 200
     else:
@@ -96,7 +95,7 @@ def update(order_id, body):
         return {"error": f"Employee not found for Id: {body.get('employee_id')}"}, 404
 
     body["id"] = order_id
-    order_schema = OrderSchema()
+    order_schema = schemas.OrderSchema()
     existing_order_deserialized = order_schema.load(body, session=session)
     session.merge(existing_order_deserialized)
 
@@ -119,7 +118,7 @@ def delete(order_id):
         return existing_order
 
     # deserialize order to a database object
-    order_schema = OrderSchema()
+    order_schema = schemas.OrderSchema()
     existing_order_deserialized = order_schema.load(existing_order[0], session=session)
 
     # if the execution reaches this line, then existing order is not None

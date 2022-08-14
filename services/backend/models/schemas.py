@@ -1,10 +1,10 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema, SQLAlchemyAutoSchema, auto_field, fields
-from services.backend.models.models import *
+from models import models
 
 
 class OrderItemSchema(SQLAlchemySchema):
     class Meta:
-        model = OrderItem
+        model = models.OrderItem
         include_fk = True
         load_instance = True
         include_relationships = True
@@ -19,7 +19,7 @@ class OrderItemSchema(SQLAlchemySchema):
 
 class OrderSchema(SQLAlchemySchema):
     class Meta:
-        model = Order
+        model = models.Order
         include_fk = True
         load_instance = True
         include_relationships = True
@@ -34,7 +34,7 @@ class OrderSchema(SQLAlchemySchema):
 
 class CustomerSchema(SQLAlchemySchema):
     class Meta:
-        model = Customer
+        model = models.Customer
         include_fk = True
         load_instance = True
         include_relationships = True
@@ -46,7 +46,7 @@ class CustomerSchema(SQLAlchemySchema):
 
 class EmployeeSchema(SQLAlchemySchema):
     class Meta:
-        model = Employee
+        model = models.Employee
         include_fk = True
         load_instance = True
         include_relationships = True
@@ -60,7 +60,7 @@ class EmployeeSchema(SQLAlchemySchema):
 
 class ItemSchema(SQLAlchemySchema):
     class Meta:
-        model = Item
+        model = models.Item
         include_fk = True
         load_instance = True
         include_relationships = True
@@ -73,7 +73,7 @@ class ItemSchema(SQLAlchemySchema):
 
 class PaymentSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = Payment
+        model = models.Payment
         include_fk = True
         load_instance = True
         include_relationships = True

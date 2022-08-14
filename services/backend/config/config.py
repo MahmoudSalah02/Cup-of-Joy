@@ -6,8 +6,8 @@ load_dotenv()
 DEBUG = True
 TESTING = False
 
-PRIVATE_KEY_PATH = "services/backend/data/jwt-key"
-PUBLIC_KEY_PATH = "services/backend/data/jwt-key.pub"
+PRIVATE_KEY_PATH = "data/jwt-key"
+PUBLIC_KEY_PATH = "data/jwt-key.pub"
 ALGORITHM = "RS256"
 TOKEN_EXPIRE_HOURS = os.getenv("TOKEN_EXPIRE_HOURS", 1)
 
