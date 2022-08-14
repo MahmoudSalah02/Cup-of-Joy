@@ -3,9 +3,9 @@ This is the items module and supports all the REST actions for the
 Item table
 """
 
-from models.models import Item
-import init_db
-from models.schemas import ItemSchema
+from services.backend.models.models import Item
+from services.backend import init_db
+from services.backend.models.schemas import ItemSchema
 
 
 def read_all():

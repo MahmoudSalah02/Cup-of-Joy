@@ -1,6 +1,6 @@
 from flask import request
-from auth.tokens_util import decode_access_token
-from config import config
+from services.backend.auth.tokens_util import decode_access_token
+from services.backend.config import config
 
 
 def validate_token():

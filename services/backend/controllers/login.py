@@ -1,7 +1,7 @@
-from models.models import Employee
-from models.schemas import EmployeeSchema
-from auth import tokens_util
-import init_db
+from services.backend.models.models import Employee
+from services.backend.models.schemas import EmployeeSchema
+from services.backend.auth import tokens_util
+from services.backend import init_db
 
 
 def process_registration_request(body):

@@ -1,6 +1,6 @@
-from models.models import Customer, Order, OrderItem, Payment, Employee, Item
-import init_db
-from seeds.data import MENU, CUSTOMERS
+from services.backend.models.models import Customer, Order, OrderItem, Payment, Employee, Item
+from services.backend import init_db
+from services.backend.seeds.data import MENU, CUSTOMERS
 from datetime import datetime
 
 

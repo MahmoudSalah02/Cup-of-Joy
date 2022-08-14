@@ -1,5 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema, SQLAlchemyAutoSchema, auto_field, fields
-from models.models import *
+from services.backend.models.models import *
 
 
 class OrderItemSchema(SQLAlchemySchema):

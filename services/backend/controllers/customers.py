@@ -3,9 +3,9 @@ This is the customers module and supports all the REST actions for the
 Customer table
 """
 
-from models.models import Customer
-import init_db
-from models.schemas import CustomerSchema, OrderSchema
+from services.backend.models.models import Customer
+from services.backend import init_db
+from services.backend.models.schemas import CustomerSchema, OrderSchema
 
 
 def read_all():

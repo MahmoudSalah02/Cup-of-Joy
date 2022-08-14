@@ -4,10 +4,10 @@ Order table
 """
 
 from sqlalchemy.exc import IntegrityError
-import init_db
-from controllers import customers, employees, payments
-from models.models import Order
-from models.schemas import OrderSchema
+from services.backend import init_db
+from services.backend.controllers import customers, employees
+from services.backend.models.models import Order
+from services.backend.models.schemas import OrderSchema
 
 
 def read_all():

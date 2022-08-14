@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from config.config import DATABASE_URI
+from services.backend.config.config import DATABASE_URI
 from models.models import Base
 
 __session = None

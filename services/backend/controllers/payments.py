@@ -3,10 +3,10 @@ This is the orders module and supports all the REST actions for the
 Payments table
 """
 
-from models.models import Payment
-import init_db
-from models.schemas import PaymentSchema
-from controllers import orders
+from services.backend.models.models import Payment
+from services.backend import init_db
+from services.backend.models.schemas import PaymentSchema
+from services.backend.controllers import orders
 from decimal import Decimal
 
 

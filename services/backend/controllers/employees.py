@@ -3,9 +3,9 @@ This is the employees module and supports all the REST actions for the
 Employee table
 """
 
-from models.models import Employee
-import init_db
-from models.schemas import EmployeeSchema
+from services.backend.models.models import Employee
+from services.backend import init_db
+from services.backend.models.schemas import EmployeeSchema
 
 
 def read_all():
