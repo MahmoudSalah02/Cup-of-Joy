@@ -3,8 +3,8 @@ This is the items module and supports all the REST actions for the
 Item table
 """
 
-from models import schemas, models
-import init_db
+from project.models import models, schemas
+from project import init_db
 
 
 def read_all():

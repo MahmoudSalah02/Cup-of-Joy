@@ -3,10 +3,8 @@ This is the employees module and supports all the REST actions for the
 Employee table
 """
 
-from models import models
-import init_db
-from models.schemas import EmployeeSchema
-
+from project import init_db
+from project.models import models, schemas
 
 def read_all():
     """
@@ -16,10 +14,10 @@ def read_all():
     """
     # Create the list of employees from our data
     session = init_db.get_session()
-    employees = session.query(Employee).order_by(Employee.name).all()
+    employees = session.query(models.Employee).order_by(models.Employee.name).all()
 
     # Serialize the data for the response
-    employee_schema = EmployeeSchema(many=True, session=session)
+    employee_schema = schemas.EmployeeSchema(many=True, session=session)
     employee_data = employee_schema.dump(employees)
 
     return employee_data, 200
@@ -34,12 +32,12 @@ def read_one(employee_id):
     """
     session = init_db.get_session()
     existing_employee = (
-        session.query(Employee).filter(Employee.id == employee_id)
+        session.query(models.Employee).filter(models.Employee.id == employee_id)
         .one_or_none()
     )
 
     if existing_employee is not None:
-        employee_schema = EmployeeSchema()
+        employee_schema = schemas.EmployeeSchema()
         employee_data_serialized = employee_schema.dump(existing_employee)
         return employee_data_serialized, 200
 
@@ -60,7 +58,7 @@ def update(employee_id, body):
         return read_one_response
 
     # deserialize data into a database object
-    employee_schema = EmployeeSchema()
+    employee_schema = schemas.EmployeeSchema()
     existing_employee_deserialized = employee_schema.load(body, session=session)
 
     session.merge(existing_employee_deserialized)
@@ -82,7 +80,7 @@ def delete(employee_id):
         return existing_employee
 
     # deserialize employee to a database object
-    employee_schema = EmployeeSchema()
+    employee_schema = schemas.EmployeeSchema()
     employee_schema_deserialized = employee_schema.load(existing_employee[0], session=session)
 
     # if the execution reaches this line, then existing employee is not None

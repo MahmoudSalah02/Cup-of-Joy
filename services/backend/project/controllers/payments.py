@@ -3,9 +3,9 @@ This is the orders module and supports all the REST actions for the
 Payments table
 """
 
-from models import models, schemas
-import init_db
-from controllers import orders
+from project.models import models, schemas
+from project import init_db
+from project.controllers import orders
 from decimal import Decimal
 
 

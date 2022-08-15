@@ -1,6 +1,8 @@
+import os
+
 from jwt import encode, decode
 from datetime import timedelta, datetime
-from config import config
+from project.config import config
 
 # TODO: error when you this file is imported from inside /seeds/
 PRIVATE_KEY = open(config.PRIVATE_KEY_PATH).read()

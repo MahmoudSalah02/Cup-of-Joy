@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from config import config
-from models import models
+from project.config import config
+from project.models import models
 
 __session = None
 
