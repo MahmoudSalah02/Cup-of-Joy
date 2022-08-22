@@ -3,9 +3,8 @@ This is the customers module and supports all the REST actions for the
 Customer table
 """
 
-from models.models import Customer
-import init_db
-from models.schemas import CustomerSchema, OrderSchema
+from project.models import models, schemas
+from project import init_db
 
 
 def read_all():
@@ -16,10 +15,10 @@ def read_all():
     """
     session = init_db.get_session()
     # Create the list of customers from our data
-    customers = session.query(Customer).order_by(Customer.name).all()
+    customers = session.query(models.Customer).order_by(models.Customer.name).all()
 
     # Serialize the data for the response
-    customer_schema = CustomerSchema(many=True)
+    customer_schema = schemas.CustomerSchema(many=True)
     customer_data = customer_schema.dump(customers)
     return customer_data, 200
 
@@ -33,7 +32,7 @@ def create(body):
     """
     session = init_db.get_session()
     existing_customer = (
-        session.query(Customer).filter(Customer.contact_number == body.get("contact_number"))
+        session.query(models.Customer).filter(models.Customer.contact_number == body.get("contact_number"))
         .one_or_none()
     )
 
@@ -41,7 +40,7 @@ def create(body):
     if existing_customer is None:
 
         # deserialize customer to a database object
-        customer_schema = CustomerSchema()
+        customer_schema = schemas.CustomerSchema()
         new_customer_deserialized = customer_schema.load(body, session=session)
 
         # add the customer to the database
@@ -65,12 +64,12 @@ def read_one(customer_id):
     """
     session = init_db.get_session()
     existing_customer = (
-        session.query(Customer).filter(Customer.id == customer_id)
+        session.query(models.Customer).filter(models.Customer.id == customer_id)
         .one_or_none()
     )
 
     if existing_customer is not None:
-        customer_schema = CustomerSchema()
+        customer_schema = schemas.CustomerSchema()
         customer_data_serialized = customer_schema.dump(existing_customer)
         return customer_data_serialized, 200
 
@@ -89,10 +88,10 @@ def read_orders(customer_id):
     if existing_customer[1] == 404:
         return existing_customer
 
-    customer_schema = CustomerSchema()
+    customer_schema = schemas.CustomerSchema()
     existing_customer_deserialized = customer_schema.load(existing_customer[0], session=session)
 
-    order_schema = OrderSchema(many=True)
+    order_schema = schemas.OrderSchema(many=True)
     orders_data = order_schema.dump(existing_customer_deserialized.orders_placed)
     return orders_data, 200
 
@@ -110,7 +109,7 @@ def update(customer_id, body):
         return read_one_response
 
     # deserialize data into a database object
-    customer_schema = CustomerSchema()
+    customer_schema = schemas.CustomerSchema()
     existing_customer_deserialized = customer_schema.load(body, session=session)
 
     session.merge(existing_customer_deserialized)
@@ -132,7 +131,7 @@ def delete(customer_id):
         return existing_customer
 
     # deserialize customer to a database object
-    customer_schema = CustomerSchema()
+    customer_schema = schemas.CustomerSchema()
     customer_schema_deserialized = customer_schema.load(existing_customer[0], session=session)
 
     # if the execution reaches this line, then existing customer is not None

@@ -1,7 +1,6 @@
 from flask import request
-from auth.tokens_util import decode_access_token
-from config import config
-
+from project.config import config
+from project.auth import tokens_util
 
 def validate_token():
     """
@@ -28,7 +27,7 @@ def validate_token():
     # at this point, the authorization_header looks something like: "Bearer ___access_token____"
     # thus we will parse and return "___access_token____"
     access_token_parsed = authorization_header.split("Bearer")[1].strip()
-    access_token_decoded = decode_access_token(access_token_parsed)
+    access_token_decoded = tokens_util.decode_access_token(access_token_parsed)
 
     is_allowed = check_permission(path_rule, access_token_decoded)
     if not is_allowed:

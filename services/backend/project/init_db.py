@@ -1,18 +1,17 @@
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from config.config import DATABASE_URI
-from models.models import Base
+from project.config import config
+from project.models import models
 
 __session = None
 
 load_dotenv()
 
-
 def init_db():
     global __session
-    engine = create_engine(DATABASE_URI)
-    Base.metadata.create_all(engine)
+    engine = create_engine(config.DATABASE_URI)
+    models.Base.metadata.create_all(engine)
     __session = scoped_session(sessionmaker(bind=engine))
 
 

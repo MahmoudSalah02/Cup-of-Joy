@@ -13,24 +13,10 @@ paths:
       tags:
         - Employees
       summary: Read all employees
-      operationId: controllers.employees.read_all
+      operationId: project.controllers.employees.read_all
       responses:
         200:
           description: Successfully read all employees
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Employee'
-    post:
-      tags:
-        - Employees
-      summary: Creates a new employee in the database
-      operationId: controllers.employees.create
-      requestBody:
-        $ref: '#/components/requestBodies/createEmployee'
-      responses:
-        200:
-          description: Successfully created an employee
           content:
             application/json:
               schema:
@@ -40,7 +26,7 @@ paths:
       tags:
         - Employees
       summary: Read a specified employee
-      operationId: controllers.employees.read_one
+      operationId: project.controllers.employees.read_one
       parameters:
         - $ref: '#/components/parameters/employeeId'
       responses:
@@ -54,7 +40,7 @@ paths:
       tags:
         - Employees
       summary: Update an employee
-      operationId: controllers.employees.update
+      operationId: project.controllers.employees.update
       parameters:
         - $ref: '#/components/parameters/employeeId'
       requestBody:
@@ -70,7 +56,7 @@ paths:
       tags:
         - Employees
       summary: Delete an employee
-      operationId: controllers.employees.delete
+      operationId: project.controllers.employees.delete
       parameters:
         - $ref: '#/components/parameters/employeeId'
       responses:
@@ -85,7 +71,7 @@ paths:
       tags:
         - Items
       summary: Read all items
-      operationId: controllers.items.read_all
+      operationId: project.controllers.items.read_all
       responses:
         200:
           description: Successfully read all items
@@ -97,7 +83,7 @@ paths:
       tags:
         - Items
       summary: Create a new item
-      operationId: controllers.items.create
+      operationId: project.controllers.items.create
       requestBody:
         $ref: '#/components/requestBodies/createItem'
       responses:
@@ -112,7 +98,7 @@ paths:
       tags:
         - Items
       summary: Read an item
-      operationId: controllers.items.read_one
+      operationId: project.controllers.items.read_one
       parameters:
         - $ref: '#/components/parameters/itemId'
       responses:
@@ -126,7 +112,7 @@ paths:
       tags:
         - Items
       summary: Update an item
-      operationId: controllers.items.update
+      operationId: project.controllers.items.update
       parameters:
         - $ref: '#/components/parameters/itemId'
       requestBody:
@@ -142,7 +128,7 @@ paths:
       tags:
         - Items
       summary: Delete an item
-      operationId: controllers.items.delete
+      operationId: project.controllers.items.delete
       parameters:
         - $ref: '#/components/parameters/itemId'
       responses:
@@ -157,7 +143,7 @@ paths:
       tags:
         - Items
       summary: Read all items
-      operationId: controllers.payments.read_all
+      operationId: project.controllers.payments.read_all
       responses:
         200:
           description: Successfully read all items
@@ -170,7 +156,7 @@ paths:
       tags:
         - Payments
       summary: Read a payment receipt
-      operationId: controllers.payments.read_one
+      operationId: project.controllers.payments.read_one
       parameters:
         - $ref: '#/components/parameters/orderId'
       responses:

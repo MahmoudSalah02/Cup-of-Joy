@@ -1,7 +1,7 @@
 import connexion
+from project.auth import validate
+from project import init_db
 
-from auth import validate
-import init_db
 
 def create_app():
     """
@@ -25,8 +25,3 @@ def create_app():
         return 'Congratulations! Your API is working'
 
     return connex_app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)

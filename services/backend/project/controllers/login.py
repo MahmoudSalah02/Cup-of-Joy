@@ -1,7 +1,6 @@
-from models.models import Employee
-from models.schemas import EmployeeSchema
-from auth import tokens_util
-import init_db
+from project.models import models, schemas
+from project.auth import tokens_util
+from project import init_db
 
 
 def process_registration_request(body):
@@ -24,7 +23,7 @@ def process_registration_request(body):
     }
 
     # deserialize employee info JSON into a db object
-    employee_schema = EmployeeSchema()
+    employee_schema = schemas.EmployeeSchema()
     new_employee_deserialized = employee_schema.load(employee_info, session=session)
 
     # add the object in the db and commit changes
@@ -62,4 +61,4 @@ def find_by_username(username):
     :return: user with matching username
     """
     session = init_db.get_session()
-    return session.query(Employee).filter(Employee.username == username).one_or_none()
+    return session.query(models.Employee).filter(models.Employee.username == username).one_or_none()
