@@ -4,9 +4,9 @@ Order table
 """
 
 from sqlalchemy.exc import IntegrityError
-from project import init_db
-from project.controllers import customers, employees
-from project.models import models, schemas
+import init_db
+from controllers import customers, employees
+from models import models, schemas
 
 
 def read_all():

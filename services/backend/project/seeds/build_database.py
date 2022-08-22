@@ -1,6 +1,6 @@
-from services.backend import Customer, Order, OrderItem, Payment, Employee, Item
-from project import init_db
-from services.backend import MENU, CUSTOMERS
+from models.models import Customer, Order, OrderItem, Payment, Employee, Item
+import init_db
+from seeds import data
 from datetime import datetime
 
 
@@ -8,7 +8,7 @@ def populate():
     session = init_db.get_session()
     try:
         items = []
-        for item in MENU:
+        for item in data.MENU:
             new_item = Item(name=item.get("name"),
                             price=item.get("price"),
                             ingredients=item.get("ingredients"))
@@ -20,7 +20,7 @@ def populate():
 
         # iterate over the MENU and CUSTOMERS structure and populate the database
         price = 10
-        for customer in CUSTOMERS:
+        for customer in data.CUSTOMERS:
             new_customer = Customer(id=customer.get("customer_id"),
                                     name=customer.get("name"),
                                     contact_number=customer.get("contact_number"))

@@ -1,6 +1,6 @@
-from project.models import models, schemas
-from project.auth import tokens_util
-from project import init_db
+from models import models, schemas
+from auth import tokens_util
+import init_db
 
 
 def process_registration_request(body):

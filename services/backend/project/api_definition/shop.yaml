@@ -13,7 +13,7 @@ paths:
       tags:
         - Order
       summary: Read all the orders
-      operationId: project.controllers.orders.read_all
+      operationId: controllers.orders.read_all
       responses:
         200:
           description: Successfully read all orders
@@ -25,7 +25,7 @@ paths:
       tags:
         - Order
       summary: Create an order
-      operationId: project.controllers.orders.create
+      operationId: controllers.orders.create
       requestBody:
         $ref: '#/components/requestBodies/createOrder'
       responses:
@@ -40,7 +40,7 @@ paths:
       tags:
         - Order
       summary: Read an order
-      operationId: project.controllers.orders.read_one
+      operationId: controllers.orders.read_one
       parameters:
         - $ref: '#/components/parameters/orderId'
       responses:
@@ -54,7 +54,7 @@ paths:
       tags:
         - Order
       summary: Update an order
-      operationId: project.controllers.orders.update
+      operationId: controllers.orders.update
       parameters:
         - $ref: '#/components/parameters/orderId'
       requestBody:
@@ -70,7 +70,7 @@ paths:
       tags:
         - Order
       summary: Delete an order
-      operationId: project.controllers.orders.delete
+      operationId: controllers.orders.delete
       parameters:
         - $ref: '#/components/parameters/orderId'
       responses:
@@ -80,12 +80,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/Order'
-  /payment/order_id:
+  /payment/{order_id}:
     post:
       tags:
         - orders
       summary: Generate a receipt
-      operationId: project.controllers.payments.create
+      operationId: controllers.payments.create
       parameters:
         - $ref: '#/components/parameters/orderId'
       responses:
@@ -101,7 +101,7 @@ paths:
       tags:
         - Customer
       summary: Read all customer
-      operationId: project.controllers.customers.read_all
+      operationId: controllers.customers.read_all
       responses:
         200:
           description: Successfully read all customers
@@ -113,7 +113,7 @@ paths:
       tags:
         - Customer
       summary: Create a new customer
-      operationId: project.controllers.customers.create
+      operationId: controllers.customers.create
       requestBody:
         $ref: '#/components/requestBodies/createCustomer'
       responses:
@@ -128,7 +128,7 @@ paths:
       tags:
         - Customer
       summary: Read a customer
-      operationId: project.controllers.customers.read_one
+      operationId: controllers.customers.read_one
       parameters:
         - $ref: '#/components/parameters/customerId'
       responses:
@@ -142,7 +142,7 @@ paths:
       tags:
         - Customer
       summary: Update a customer
-      operationId: project.controllers.customers.update
+      operationId: controllers.customers.update
       parameters:
         - $ref: '#/components/parameters/customerId'
       requestBody:
@@ -158,7 +158,7 @@ paths:
       tags:
         - Customer
       summary: Delete a customer
-      operationId: project.controllers.customers.delete
+      operationId: controllers.customers.delete
       parameters:
         - $ref: '#/components/parameters/customerId'
       responses:
@@ -173,7 +173,7 @@ paths:
       tags:
         - Customer
       summary: Read a customer orders
-      operationId: project.controllers.customers.read_orders
+      operationId: controllers.customers.read_orders
       parameters:
         - $ref: '#/components/parameters/customerId'
       responses:
