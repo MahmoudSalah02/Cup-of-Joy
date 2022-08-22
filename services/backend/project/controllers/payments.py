@@ -3,9 +3,10 @@ This is the orders module and supports all the REST actions for the
 Payments table
 """
 
-from project.models import models, schemas
-from project import init_db
-from project.controllers import orders
+from models import models, schemas
+import init_db
+from controllers import orders
+from models.schemas import OrderSchema
 from decimal import Decimal
 
 
@@ -48,17 +49,18 @@ def read_one(order_id):
 
 def create(order_id):
 
-    existing_payment = read_one(order_id)
-    if existing_payment[1] == 404:
-        return existing_payment[0]
+    session = init_db.get_session()
 
-    existing_order = orders.read_one(order_id)
-    if existing_order[1] == 404:
+    existing_payment = read_one(order_id)
+    if existing_payment[1] == 200:
+        return {"error": f"order {order_id} has been paid"}
+
+    existing_order = session.query(models.Order).filter(models.Order.id == order_id).one_or_none()
+    if not existing_order:
         return {"error": f"Order with id {order_id} not found"}, 404
 
-    session = init_db.get_session()
     price = 0
-    for orderItem in existing_order[0].items_ordered:
+    for orderItem in existing_order.items_ordered:
         item_details = orderItem.item_details
         if str(item_details.price).startswith("$") and is_float(str(item_details.price)[1:]):
             price += Decimal(item_details.price.strip('$')) * orderItem.quantity
@@ -66,15 +68,15 @@ def create(order_id):
             return {"error": "price should be in '$00.00' format"}
 
     new_payment = {
-        "order_id": existing_order[0].get("id"),
-        "customer_id": existing_order[0].get("customer_id"),
-        "employee_id": existing_order[0].get("employee_id"),
-        "price": price
+        "order_id": existing_order.id,
+        "customer_id": existing_order.customer_id,
+        "employee_id": existing_order.employee_id,
+        "price": "$" + str(price)
     }
 
     payment_schema = schemas.PaymentSchema()
-    payment_schema.load(new_payment, session=session)
-
+    payment_db = payment_schema.load(new_payment, session=session)
+    session.add(payment_db)
     session.commit()
     return new_payment, 200
 

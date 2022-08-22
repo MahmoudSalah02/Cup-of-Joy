@@ -1,6 +1,6 @@
 from flask import request
-from project.config import config
-from project.auth import tokens_util
+from config import config
+from auth import tokens_util
 
 def validate_token():
     """
